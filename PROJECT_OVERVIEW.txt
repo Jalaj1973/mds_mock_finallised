@@ -1,0 +1,257 @@
+===============================================================================
+                    NEET-PG MOCK TEST PLATFORM - PROJECT OVERVIEW
+===============================================================================
+
+PROJECT NAME: medsPG (NEET-PG Mock Test Platform)
+DEVELOPER: Jalaj Balodi
+EMAIL: jalajbalodi264@gmail.com
+TECH STACK: Vite + React (TypeScript) + TailwindCSS + shadcn/ui + Supabase
+
+===============================================================================
+                                PROJECT DESCRIPTION
+===============================================================================
+
+This is a comprehensive NEET-PG (National Eligibility cum Entrance Test for 
+Postgraduate) mock test platform designed to help medical students prepare for 
+their postgraduate entrance examinations. The platform provides subject-wise 
+practice tests, full-length mock exams, detailed analytics, and result tracking 
+to enhance exam preparation.
+
+===============================================================================
+                                CORE FEATURES
+===============================================================================
+
+1. USER AUTHENTICATION & AUTHORIZATION
+   - Secure user registration and login system
+   - Email verification for new accounts
+   - Session management with persistent login
+   - Protected routes and user-specific data access
+
+2. SUBJECT-WISE TEST SYSTEM
+   - Multiple medical subjects (Anatomy, Physiology, Pathology, Pharmacology, 
+     Microbiology, Medicine, etc.)
+   - Randomized question selection (up to 20 questions per test)
+   - Subject-specific question filtering
+   - Search functionality for subjects
+
+3. INTERACTIVE TEST INTERFACE
+   - Real-time timer with countdown (approximately 63 seconds per question)
+   - Progress tracking and navigation between questions
+   - Answer selection with radio button interface
+   - Skip functionality for unanswered questions
+   - Auto-submission when time expires
+
+4. COMPREHENSIVE RESULTS & ANALYTICS
+   - Detailed score breakdown (correct, incorrect, skipped)
+   - Percentage-based scoring system
+   - Question-by-question review with explanations
+   - Performance analytics dashboard
+   - Subject-wise performance tracking
+   - Historical test result storage
+
+5. MODERN USER INTERFACE
+   - Responsive design for all device sizes
+   - Clean, medical-themed color scheme
+   - Smooth animations and transitions
+   - Intuitive navigation and user experience
+   - Professional landing page with feature highlights
+
+===============================================================================
+                                TECHNOLOGY STACK
+===============================================================================
+
+FRONTEND FRAMEWORK:
+- Vite (Build tool and development server)
+- React 18.3.1 (UI library)
+- TypeScript (Type safety and development experience)
+
+UI COMPONENTS & STYLING:
+- TailwindCSS 3.4.17 (Utility-first CSS framework)
+- shadcn/ui (High-quality, accessible component library)
+- Radix UI primitives (Headless UI components)
+- Framer Motion 12.23.12 (Animation library)
+- Lucide React (Icon library)
+
+STATE MANAGEMENT & DATA FETCHING:
+- React Query (TanStack Query) 5.83.0 (Server state management)
+- React Router DOM 6.30.1 (Client-side routing)
+- React Hook Form 7.61.1 (Form handling)
+- Zod 3.25.76 (Schema validation)
+
+BACKEND & DATABASE:
+- Supabase (Backend-as-a-Service)
+  - PostgreSQL database
+  - Real-time subscriptions
+  - Row Level Security (RLS)
+  - Authentication system
+  - Auto-generated TypeScript types
+
+CHARTS & VISUALIZATION:
+- Recharts 2.15.4 (Data visualization library)
+- Custom SVG progress indicators
+
+DEVELOPMENT TOOLS:
+- ESLint (Code linting)
+- TypeScript ESLint (TypeScript-specific linting)
+- PostCSS (CSS processing)
+- Autoprefixer (CSS vendor prefixing)
+
+===============================================================================
+                                PROJECT ARCHITECTURE
+===============================================================================
+
+FOLDER STRUCTURE:
+├── src/
+│   ├── components/ui/          # Reusable UI components (shadcn/ui)
+│   ├── hooks/                  # Custom React hooks
+│   │   ├── useAuth.tsx        # Authentication context and logic
+│   │   └── use-toast.ts       # Toast notification hook
+│   ├── integrations/supabase/ # Supabase configuration
+│   │   ├── client.ts          # Supabase client setup
+│   │   └── types.ts           # Database type definitions
+│   ├── lib/                   # Utility functions
+│   │   └── utils.ts           # Common utility functions
+│   ├── pages/                 # Main application pages
+│   │   ├── Landing.tsx        # Homepage/landing page
+│   │   ├── Auth.tsx           # Authentication page
+│   │   ├── Dashboard.tsx      # Main dashboard with subjects
+│   │   ├── Test.tsx           # Test taking interface
+│   │   ├── Results.tsx        # Test results and review
+│   │   ├── Analytics.tsx      # Performance analytics
+│   │   ├── Terms.tsx          # Terms of service
+│   │   └── NotFound.tsx       # 404 error page
+│   ├── App.tsx                # Main application component
+│   ├── main.tsx               # Application entry point
+│   └── index.css              # Global styles
+
+DATABASE SCHEMA:
+- Questions Table:
+  - id (Primary Key)
+  - question_text (Text content)
+  - options (JSON array of answer choices)
+  - correct_answer (Correct option)
+  - subject (Subject category)
+  - explanation (Answer explanation)
+
+- TestResults Table:
+  - id (Primary Key)
+  - user_id (Foreign Key to auth.users)
+  - subject (Subject tested)
+  - score_percent (Percentage score)
+  - correct_count (Number of correct answers)
+  - wrong_count (Number of incorrect answers)
+  - total_questions (Total questions in test)
+  - created_at (Timestamp)
+
+- Subjects Table:
+  - id (Primary Key)
+  - name (Subject name)
+
+===============================================================================
+                                KEY COMPONENTS
+===============================================================================
+
+1. AUTHENTICATION SYSTEM (useAuth.tsx):
+   - Context-based authentication state management
+   - Supabase Auth integration
+   - Sign up, sign in, and sign out functionality
+   - Session persistence and auto-refresh
+
+2. DASHBOARD (Dashboard.tsx):
+   - Subject selection interface
+   - Progress tracking display
+   - Recent activity overview
+   - Performance metrics visualization
+   - Search and filtering capabilities
+
+3. TEST INTERFACE (Test.tsx):
+   - Question display and navigation
+   - Timer implementation
+   - Answer selection and tracking
+   - Progress indication
+   - Auto-submission on timeout
+
+4. RESULTS SYSTEM (Results.tsx):
+   - Score calculation and display
+   - Detailed question review
+   - Answer explanation display
+   - Performance feedback
+   - Automatic result saving to database
+
+5. ANALYTICS DASHBOARD (Analytics.tsx):
+   - Performance trend charts
+   - Subject-wise performance analysis
+   - Test history overview
+   - Statistical insights
+
+6. LANDING PAGE (Landing.tsx):
+   - Marketing and feature showcase
+   - Authentication modal integration
+   - Responsive design
+   - Call-to-action elements
+
+===============================================================================
+                                SECURITY FEATURES
+===============================================================================
+
+- Row Level Security (RLS) in Supabase
+- User-specific data access controls
+- Secure authentication with email verification
+- Protected routes requiring authentication
+- Input validation and sanitization
+- HTTPS communication with Supabase
+
+===============================================================================
+                                DEPLOYMENT & CONFIGURATION
+===============================================================================
+
+BUILD CONFIGURATION:
+- Vite development server on port 8080
+- Production build optimization
+- TypeScript compilation
+- CSS processing with TailwindCSS
+
+SUPABASE CONFIGURATION:
+- Project URL: https://nvvccwjkkhjtkctuinae.supabase.co
+- Anonymous key configured for client-side access
+- Local storage for session persistence
+- Auto-refresh token functionality
+
+===============================================================================
+                                FUTURE ENHANCEMENTS
+===============================================================================
+
+PLANNED FEATURES:
+- Bulk question bank upload system
+- Payment integration (Stripe + Razorpay)
+- Advanced analytics and reporting
+- Full-length exam simulations
+- Study plans and recommendations
+- Social features and leaderboards
+- Mobile app development
+
+===============================================================================
+                                DEVELOPMENT NOTES
+===============================================================================
+
+- The project follows modern React patterns with hooks and functional components
+- TypeScript provides type safety throughout the application
+- Component-based architecture promotes reusability
+- Responsive design ensures cross-device compatibility
+- Clean code practices with proper separation of concerns
+- Error handling and loading states implemented throughout
+- Accessibility considerations with semantic HTML and ARIA attributes
+
+===============================================================================
+                                CONTACT INFORMATION
+===============================================================================
+
+Developer: Jalaj Balodi
+Email: jalajbalodi264@gmail.com
+Project: NEET-PG Mock Test Platform (medsPG)
+
+This project represents a comprehensive solution for medical students preparing 
+for NEET-PG examinations, combining modern web technologies with educational 
+best practices to create an effective learning platform.
+
+===============================================================================
