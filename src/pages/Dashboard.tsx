@@ -11,7 +11,8 @@ import {
   Stethoscope, 
   BookOpen, 
   LogOut,
-  BarChart3
+  BarChart3,
+  MessageSquare
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -191,6 +192,15 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <ThemeToggle />
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/community')}
+              className="flex items-center gap-2 text-xs sm:text-sm"
+              size="sm"
+            >
+              <MessageSquare className="h-4 w-4" />
+              <span className="hidden sm:inline">Community</span>
+            </Button>
             <Button 
               variant="outline" 
               onClick={() => navigate('/analytics')}
