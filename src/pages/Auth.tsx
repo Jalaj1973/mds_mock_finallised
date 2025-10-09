@@ -15,6 +15,7 @@ const Auth = () => {
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   if (loading) {
@@ -31,9 +32,19 @@ const Auth = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!fullName.trim()) {
+      toast({
+        title: "Full Name Required",
+        description: "Please enter your full name.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
     
-    const { error } = await signUp(email, password);
+    const { error } = await signUp(email, password, fullName.trim());
     
     if (error) {
       toast({
@@ -159,6 +170,18 @@ const Auth = () => {
             
             <TabsContent value="signup">
               <form onSubmit={handleSignUp} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="signup-fullname">Full Name</Label>
+                  <Input
+                    id="signup-fullname"
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                    placeholder="Enter your full name"
+                    className="text-foreground dark:text-white"
+                  />
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
                   <Input

@@ -27,6 +27,15 @@ const Dashboard = () => {
     return <Navigate to="/" replace />;
   }
 
+  // Helper function to get user's display name
+  const getDisplayName = () => {
+    return user?.user_metadata?.display_name || 
+           user?.user_metadata?.full_name || 
+           user?.user_metadata?.name || 
+           user?.email?.split('@')[0] || 
+           'User';
+  };
+
   const fallbackSubjects = [
     { name: "Anatomy" },
     { name: "Physiology" },
@@ -204,7 +213,7 @@ const Dashboard = () => {
             {/* Welcome Card */}
             <Card className="rounded-2xl shadow-sm">
               <CardHeader className="pb-2">
-                <CardTitle className="text-xl sm:text-2xl">Welcome back{user?.user_metadata?.full_name ? `, ${user.user_metadata.full_name}` : ""}!</CardTitle>
+                <CardTitle className="text-xl sm:text-2xl">Welcome, {getDisplayName()}!</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground text-sm sm:text-base">Continue your preparation and track your progress.</p>

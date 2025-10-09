@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface AuthContextType {
   user: User | null;
   session: Session | null;
-  signUp: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signInWithGoogle: () => Promise<{ error: any }>;
   signOut: () => Promise<void>;
@@ -22,7 +22,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+          // Handle Google OAuth user metadata
+          const user = session.user;
+          if (user.app_metadata?.provider === 'google' && user.user_metadata) {
+            const { full_name, name, given_name, family_name } = user.user_metadata;
+            const displayName = full_name || name || `${given_name || ''} ${family_name || ''}`.trim();
+            
+            // Update user metadata if display_name is missing
+            if (displayName && !user.user_metadata.display_name) {
+              await supabase.auth.updateUser({
+                data: {
+                  display_name: displayName,
+                  full_name: displayName
+                }
+              });
+            }
+          }
+        }
+        
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -39,14 +58,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, fullName: string) => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: redirectUrl
+        emailRedirectTo: redirectUrl,
+        data: {
+          display_name: fullName,
+          full_name: fullName
+        }
       }
     });
     return { error };
