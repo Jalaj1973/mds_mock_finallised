@@ -61,7 +61,12 @@ const Community = () => {
 
         if (fetchError) {
           console.error("Error fetching posts:", fetchError);
-          setError("Failed to load community posts");
+          // Check if it's a table doesn't exist error
+          if (fetchError.code === 'PGRST116' || fetchError.message?.includes('relation') || fetchError.message?.includes('does not exist')) {
+            setError("Community posts table not set up yet. Please run the database setup script.");
+          } else {
+            setError("Failed to load community posts");
+          }
           return;
         }
 

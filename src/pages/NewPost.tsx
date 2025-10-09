@@ -98,11 +98,20 @@ const NewPost = () => {
 
       if (error) {
         console.error("Error creating post:", error);
-        toast({
-          title: "Failed to Create Post",
-          description: error.message || "An error occurred while creating your post.",
-          variant: "destructive",
-        });
+        // Check if it's a table doesn't exist error
+        if (error.code === 'PGRST116' || error.message?.includes('relation') || error.message?.includes('does not exist')) {
+          toast({
+            title: "Database Not Set Up",
+            description: "Community posts table not set up yet. Please run the database setup script first.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Failed to Create Post",
+            description: error.message || "An error occurred while creating your post.",
+            variant: "destructive",
+          });
+        }
         return;
       }
 
