@@ -32,17 +32,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             
             // Update user metadata if display_name is missing
             if (displayName && !user.user_metadata.display_name) {
-              try {
-                await supabase.auth.updateUser({
-                  data: {
-                    display_name: displayName,
-                    full_name: displayName
-                  }
-                });
-              } catch (error) {
-                console.error("Error updating user metadata:", error);
-                // Don't throw the error, just log it and continue
-              }
+              await supabase.auth.updateUser({
+                data: {
+                  display_name: displayName,
+                  full_name: displayName
+                }
+              });
             }
           }
         }

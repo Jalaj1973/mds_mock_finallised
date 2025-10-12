@@ -11,8 +11,6 @@ import Dashboard from "./pages/Dashboard";
 import Test from "./pages/Test";
 import Results from "./pages/Results";
 import Analytics from "./pages/Analytics";
-import Community from "./pages/Community";
-import NewPost from "./pages/NewPost";
 import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
 import { AnimatePresence, motion } from "framer-motion";
@@ -37,8 +35,6 @@ function RouteTransitions() {
           <Route path="/test/:subject" element={<Test />} />
           <Route path="/results" element={<Results />} />
           <Route path="/analytics" element={<Analytics />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/community/new" element={<NewPost />} />
           <Route path="/terms" element={<Terms />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
