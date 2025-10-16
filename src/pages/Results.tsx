@@ -66,7 +66,6 @@ const Results = () => {
         if (error) {
           console.error('Error saving test results:', error);
         } else {
-          console.log('Test results saved successfully:', resultData);
         }
       } catch (error) {
         console.error('Error saving test results:', error);

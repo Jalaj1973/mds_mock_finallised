@@ -61,13 +61,21 @@ const Dashboard = () => {
     const load = async () => {
       setLoadingSubjects(true);
       try {
+        // Get unique subjects from Questions table instead of non-existent subjects table
         const { data, error } = await supabase
-          .from("subjects")
-          .select("id,name")
-          .order("name", { ascending: true })
-          .limit(200);
+          .from("Questions")
+          .select("subject")
+          .order("subject", { ascending: true });
+        
         if (!error && data && isMounted && data.length > 0) {
-          setSubjects(data.map(s => ({ id: s.id as unknown as string, name: s.name as unknown as string })));
+          // Extract unique subjects and convert to the expected format
+          const uniqueSubjects = Array.from(new Set(data.map(q => q.subject)))
+            .filter(subject => subject) // Remove null/empty subjects
+            .map(subject => ({ name: subject }));
+          
+          if (uniqueSubjects.length > 0) {
+            setSubjects(uniqueSubjects);
+          }
         }
       } catch (e) {
         // silently fall back
