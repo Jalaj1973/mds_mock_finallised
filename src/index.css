@@ -160,22 +160,3 @@ All colors MUST be HSL.
     transform: translateY(-1px);
   }
 }
-
-/* Background Ripple Effect Animation */
-@layer utilities {
-  @keyframes cell-ripple {
-    0% {
-      opacity: 0.4;
-    }
-    50% {
-      opacity: 0.8;
-    }
-    100% {
-      opacity: 0.4;
-    }
-  }
-
-  .animate-cell-ripple {
-    animation: cell-ripple 200ms ease-out forwards;
-  }
-}

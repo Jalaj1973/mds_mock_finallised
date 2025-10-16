@@ -8,7 +8,6 @@ import CustomAuth from "./Auth";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/hooks/useAuth";
-import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -256,8 +255,7 @@ const Landing = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-light relative overflow-hidden">
-      <BackgroundRippleEffect />
+    <div className="min-h-screen bg-gradient-light">
       <style>{`
         @keyframes shine {
           0% { transform: translateX(-100%); }
@@ -275,7 +273,7 @@ const Landing = () => {
         </DialogContent>
       </Dialog>
       {/* Sticky Navbar */}
-      <header className="sticky top-0 z-40 w-full backdrop-blur supports-[backdrop-filter]:bg-background/70 bg-background/80 border-b relative">
+      <header className="sticky top-0 z-40 w-full backdrop-blur supports-[backdrop-filter]:bg-background/70 bg-background/80 border-b">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
@@ -312,7 +310,7 @@ const Landing = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-16 md:pt-16 md:pb-24 relative z-10">
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-16 md:pt-16 md:pb-24">
         <div className={`grid md:grid-cols-2 gap-10 items-center transition-all duration-700 ${heroFade}`}>
           <div>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
@@ -351,7 +349,7 @@ const Landing = () => {
       </section>
 
       {/* Features */}
-      <section id="features" className="bg-gradient-card py-14 relative z-10">
+      <section id="features" className="bg-gradient-card py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -377,7 +375,7 @@ const Landing = () => {
       </section>
 
       {/* Subjects Preview */}
-      <section id="subjects" className="py-14 bg-gradient-to-b from-muted/50 to-background relative z-10">
+      <section id="subjects" className="py-14 bg-gradient-to-b from-muted/50 to-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between flex-wrap gap-4 mb-6">
             <h2 className="text-2xl font-bold">Popular Subjects</h2>
@@ -405,7 +403,7 @@ const Landing = () => {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="py-14 bg-gradient-card relative z-10">
+      <section id="pricing" className="py-14 bg-gradient-card">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-6">Simple Pricing</h2>
           <div className={`transition-all duration-700 ${analyticsFade}`}>
@@ -437,7 +435,7 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer id="contact" className="border-t bg-gradient-to-r from-muted/40 to-muted/60 relative z-10">
+      <footer id="contact" className="border-t bg-gradient-to-r from-muted/40 to-muted/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-sm text-muted-foreground">
             Made by <span className="font-medium">Jalaj Balodi</span> ·
