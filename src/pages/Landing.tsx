@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 
 const primaryBlue = "#2563EB";
 const accentGreen = "#10B981";
@@ -255,7 +256,13 @@ const Landing = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-light">
+    <div className="min-h-screen bg-gradient-light relative overflow-hidden">
+      {/* Background Ripple Effect */}
+      <BackgroundRippleEffect 
+        rows={6} 
+        cols={20} 
+        cellSize={40}
+      />
       <style>{`
         @keyframes shine {
           0% { transform: translateX(-100%); }
@@ -310,7 +317,7 @@ const Landing = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-16 md:pt-16 md:pb-24">
+      <section className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10 pb-16 md:pt-16 md:pb-24">
         <div className={`grid md:grid-cols-2 gap-10 items-center transition-all duration-700 ${heroFade}`}>
           <div>
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
@@ -349,7 +356,7 @@ const Landing = () => {
       </section>
 
       {/* Features */}
-      <section id="features" className="bg-gradient-card py-14">
+      <section id="features" className="relative z-10 bg-gradient-card py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -375,7 +382,7 @@ const Landing = () => {
       </section>
 
       {/* Subjects Preview */}
-      <section id="subjects" className="py-14 bg-gradient-to-b from-muted/50 to-background">
+      <section id="subjects" className="relative z-10 py-14 bg-gradient-to-b from-muted/50 to-background">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between flex-wrap gap-4 mb-6">
             <h2 className="text-2xl font-bold">Popular Subjects</h2>
@@ -403,7 +410,7 @@ const Landing = () => {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="py-14 bg-gradient-card">
+      <section id="pricing" className="relative z-10 py-14 bg-gradient-card">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-6">Simple Pricing</h2>
           <div className={`transition-all duration-700 ${analyticsFade}`}>
@@ -435,7 +442,7 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer id="contact" className="border-t bg-gradient-to-r from-muted/40 to-muted/60">
+      <footer id="contact" className="relative z-10 border-t bg-gradient-to-r from-muted/40 to-muted/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-sm text-muted-foreground">
             Made by <span className="font-medium">Jalaj Balodi</span> ·
