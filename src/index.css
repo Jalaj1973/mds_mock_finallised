@@ -165,20 +165,17 @@ All colors MUST be HSL.
 @layer utilities {
   @keyframes cell-ripple {
     0% {
-      opacity: 0;
-      transform: scale(0.8);
+      opacity: 0.4;
     }
     50% {
-      opacity: 1;
-      transform: scale(1.1);
+      opacity: 0.8;
     }
     100% {
-      opacity: 0;
-      transform: scale(1);
+      opacity: 0.4;
     }
   }
 
   .animate-cell-ripple {
-    animation: cell-ripple 600ms ease-out forwards;
+    animation: cell-ripple 200ms ease-out forwards;
   }
 }
