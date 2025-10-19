@@ -13,6 +13,9 @@ import Results from "./pages/Results";
 import Analytics from "./pages/Analytics";
 import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
+import CommunityPage from "./pages/community/CommunityPage";
+import NewPostPage from "./pages/community/NewPostPage";
+import PostDetailPage from "./pages/community/PostDetailPage";
 import { AnimatePresence, motion } from "framer-motion";
 
 const queryClient = new QueryClient();
@@ -36,6 +39,9 @@ function RouteTransitions() {
           <Route path="/results" element={<Results />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/community" element={<CommunityPage />} />
+          <Route path="/community/new" element={<NewPostPage />} />
+          <Route path="/community/post/:id" element={<PostDetailPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

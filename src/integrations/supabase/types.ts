@@ -88,6 +88,163 @@ export type Database = {
           }
         ]
       }
+      posts: {
+        Row: {
+          id: number
+          title: string
+          content: string
+          subject: string
+          author_id: string
+          author_name: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          title: string
+          content: string
+          subject: string
+          author_id: string
+          author_name: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          title?: string
+          content?: string
+          subject?: string
+          author_id?: string
+          author_name?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      replies: {
+        Row: {
+          id: number
+          post_id: number
+          content: string
+          author_id: string
+          author_name: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          post_id: number
+          content: string
+          author_id: string
+          author_name: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          post_id?: number
+          content?: string
+          author_id?: string
+          author_name?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "replies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "replies_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      votes: {
+        Row: {
+          id: number
+          post_id: number
+          user_id: string
+          vote_type: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          post_id: number
+          user_id: string
+          vote_type: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          post_id?: number
+          user_id?: string
+          vote_type?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "votes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "votes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      user_points: {
+        Row: {
+          id: number
+          user_id: string
+          points: number
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          user_id: string
+          points?: number
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          user_id?: string
+          points?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_points_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never

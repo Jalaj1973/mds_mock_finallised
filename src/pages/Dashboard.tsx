@@ -11,7 +11,8 @@ import {
   Stethoscope, 
   BookOpen, 
   LogOut,
-  BarChart3
+  BarChart3,
+  MessageSquare
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -55,6 +56,7 @@ const Dashboard = () => {
   const [averageAccuracy, setAverageAccuracy] = useState<number>(0);
   const [subjectPerformance, setSubjectPerformance] = useState<{ name: string; value: number }[]>([]);
   const [recentActivity, setRecentActivity] = useState<{ subject: string; date: string }[]>([]);
+  const [userPoints, setUserPoints] = useState<number>(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -153,6 +155,32 @@ const Dashboard = () => {
     return () => { isMounted = false; };
   }, [user?.id]);
 
+  // Load user points
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const loadPoints = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("user_points")
+          .select("points")
+          .eq("user_id", user.id)
+          .single();
+
+        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+          console.error("Error loading points:", error);
+          return;
+        }
+
+        setUserPoints(data?.points || 0);
+      } catch (error) {
+        console.error("Error loading points:", error);
+      }
+    };
+
+    loadPoints();
+  }, [user?.id]);
+
   const iconPool = [Brain, Heart, Microscope, Pill, Bug, Stethoscope, BookOpen];
   const colorPool = [
     "from-blue-100 to-blue-200",
@@ -199,6 +227,15 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
             <ThemeToggle />
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/community')}
+              className="flex items-center gap-2 text-xs sm:text-sm"
+              size="sm"
+            >
+              <MessageSquare className="h-4 w-4" />
+              <span className="hidden sm:inline">Community</span>
+            </Button>
             <Button 
               variant="outline" 
               onClick={() => navigate('/analytics')}
@@ -285,6 +322,32 @@ const Dashboard = () => {
 
           {/* Right Progress Panel */}
           <div className="space-y-4 sm:space-y-6">
+            {/* Forum Points Card */}
+            <Card className="rounded-2xl shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5 text-primary" />
+                  Forum Points
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center">
+                  <div className="text-2xl sm:text-3xl font-bold text-primary">{userPoints}</div>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                    Earn points by participating in community discussions
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-3 w-full"
+                    onClick={() => navigate('/community')}
+                  >
+                    Join Community
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             <Card className="rounded-2xl shadow-sm">
               <CardHeader>
                 <CardTitle className="text-base sm:text-lg">Your Progress</CardTitle>
