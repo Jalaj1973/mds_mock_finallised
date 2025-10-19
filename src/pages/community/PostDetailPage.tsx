@@ -28,7 +28,7 @@ interface Post {
   content: string;
   subject: string;
   author_name: string;
-  author_id: string;
+  user_id: string;
   created_at: string;
   updated_at: string;
   upvotes: number;
@@ -40,7 +40,7 @@ interface Reply {
   id: number;
   content: string;
   author_name: string;
-  author_id: string;
+  user_id: string;
   created_at: string;
   updated_at: string;
 }
@@ -232,7 +232,7 @@ const PostDetailPage = () => {
         .insert({
           post_id: parseInt(id!),
           content: newReply.trim(),
-          author_id: user.id,
+          user_id: user.id,
           author_name: displayName
         });
 
@@ -260,7 +260,7 @@ const PostDetailPage = () => {
   };
 
   const handleDeletePost = async () => {
-    if (!user || !post || user.id !== post.author_id) return;
+    if (!user || !post || user.id !== post.user_id) return;
 
     if (!confirm("Are you sure you want to delete this post? This action cannot be undone.")) {
       return;
@@ -411,7 +411,7 @@ const PostDetailPage = () => {
                       <ThumbsDown className="h-4 w-4" />
                     </Button>
                   </div>
-                  {user && user.id === post.author_id && (
+                  {user && user.id === post.user_id && (
                     <Button
                       variant="ghost"
                       size="sm"

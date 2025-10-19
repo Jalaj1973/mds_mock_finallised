@@ -94,7 +94,7 @@ export type Database = {
           title: string
           content: string
           subject: string
-          author_id: string
+          user_id: string
           author_name: string
           created_at: string
           updated_at: string
@@ -104,7 +104,7 @@ export type Database = {
           title: string
           content: string
           subject: string
-          author_id: string
+          user_id: string
           author_name: string
           created_at?: string
           updated_at?: string
@@ -114,15 +114,15 @@ export type Database = {
           title?: string
           content?: string
           subject?: string
-          author_id?: string
+          user_id?: string
           author_name?: string
           created_at?: string
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "posts_author_id_fkey"
-            columns: ["author_id"]
+            foreignKeyName: "posts_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -134,7 +134,7 @@ export type Database = {
           id: number
           post_id: number
           content: string
-          author_id: string
+          user_id: string
           author_name: string
           created_at: string
           updated_at: string
@@ -143,7 +143,7 @@ export type Database = {
           id?: number
           post_id: number
           content: string
-          author_id: string
+          user_id: string
           author_name: string
           created_at?: string
           updated_at?: string
@@ -152,7 +152,7 @@ export type Database = {
           id?: number
           post_id?: number
           content?: string
-          author_id?: string
+          user_id?: string
           author_name?: string
           created_at?: string
           updated_at?: string
@@ -166,8 +166,8 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "replies_author_id_fkey"
-            columns: ["author_id"]
+            foreignKeyName: "replies_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]

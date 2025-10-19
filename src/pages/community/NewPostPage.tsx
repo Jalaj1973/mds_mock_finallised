@@ -62,7 +62,7 @@ const NewPostPage = () => {
           title: formData.title.trim(),
           subject: formData.subject,
           content: formData.content.trim(),
-          author_id: user.id,
+          user_id: user.id,
           author_name: displayName
         })
         .select()
