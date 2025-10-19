@@ -49,21 +49,13 @@ const NewPostPage = () => {
     try {
       setLoading(true);
 
-      // Get user's display name
-      const displayName = user?.user_metadata?.display_name || 
-                         user?.user_metadata?.full_name || 
-                         user?.user_metadata?.name || 
-                         user?.email?.split('@')[0] || 
-                         'Anonymous';
-
       const { data, error } = await supabase
         .from("posts")
         .insert({
           title: formData.title.trim(),
           subject: formData.subject,
           content: formData.content.trim(),
-          user_id: user.id,
-          author_name: displayName
+          user_id: user.id
         })
         .select()
         .single();

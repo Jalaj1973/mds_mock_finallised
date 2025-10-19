@@ -95,7 +95,6 @@ export type Database = {
           content: string
           subject: string
           user_id: string
-          author_name: string
           created_at: string
           updated_at: string
         }
@@ -105,7 +104,6 @@ export type Database = {
           content: string
           subject: string
           user_id: string
-          author_name: string
           created_at?: string
           updated_at?: string
         }
@@ -115,7 +113,6 @@ export type Database = {
           content?: string
           subject?: string
           user_id?: string
-          author_name?: string
           created_at?: string
           updated_at?: string
         }
@@ -135,7 +132,6 @@ export type Database = {
           post_id: number
           content: string
           user_id: string
-          author_name: string
           created_at: string
           updated_at: string
         }
@@ -144,7 +140,6 @@ export type Database = {
           post_id: number
           content: string
           user_id: string
-          author_name: string
           created_at?: string
           updated_at?: string
         }
@@ -153,7 +148,6 @@ export type Database = {
           post_id?: number
           content?: string
           user_id?: string
-          author_name?: string
           created_at?: string
           updated_at?: string
         }

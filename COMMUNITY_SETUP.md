@@ -8,10 +8,10 @@
    ```
 
 2. **Tables created:**
-   - `posts` - Stores community discussion posts
-   - `replies` - Stores replies to posts
-   - `votes` - Stores upvote/downvote data
-   - `user_points` - Tracks user points for gamification
+   - `posts` - Stores community discussion posts (uses `user_id` for author)
+   - `replies` - Stores replies to posts (uses `user_id` for author)
+   - `votes` - Stores upvote/downvote data (uses `user_id` for voter)
+   - `user_points` - Tracks user points for gamification (uses `user_id`)
 
 ## Features Implemented
 
@@ -24,6 +24,7 @@
 - All community features require user authentication
 - User display names are automatically used from auth metadata
 - Google OAuth users get their names from Google profile
+- All database operations use `user_id` consistently for user identification
 
 ### ✅ Voting System
 - Upvote/downvote posts
@@ -68,8 +69,9 @@
 
 ### Security
 - Row Level Security (RLS) enabled on all tables
-- Users can only edit their own posts and replies
+- Users can only edit their own posts and replies (using `user_id`)
 - Proper authentication checks throughout
+- Consistent user identification across all operations
 
 ### Performance
 - Indexed database columns for fast queries
