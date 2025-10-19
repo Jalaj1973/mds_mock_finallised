@@ -27,6 +27,7 @@ interface Post {
   title: string;
   content: string;
   subject: string;
+  author_name: string;
   user_id: string;
   created_at: string;
   updated_at: string;
@@ -38,6 +39,7 @@ interface Post {
 interface Reply {
   id: number;
   content: string;
+  author_name: string;
   user_id: string;
   created_at: string;
   updated_at: string;
@@ -54,22 +56,6 @@ const PostDetailPage = () => {
   const [replyLoading, setReplyLoading] = useState(false);
   const [newReply, setNewReply] = useState("");
   const [voteLoading, setVoteLoading] = useState(false);
-  const [userNames, setUserNames] = useState<Record<string, string>>({});
-
-  // Function to get user display name
-  const getUserDisplayName = (userId: string): string => {
-    return userNames[userId] || 'Loading...';
-  };
-
-  // Function to get user display name from current user context
-  const getCurrentUserDisplayName = (): string => {
-    if (!user) return 'Anonymous';
-    return user?.user_metadata?.display_name || 
-           user?.user_metadata?.full_name || 
-           user?.user_metadata?.name || 
-           user?.email?.split('@')[0] || 
-           'Anonymous';
-  };
 
   useEffect(() => {
     if (id) {
@@ -114,14 +100,6 @@ const PostDetailPage = () => {
         downvotes,
         user_vote: userVote
       });
-
-      // Set user name for post author if it's the current user
-      if (user && data.user_id === user.id) {
-        setUserNames(prev => ({
-          ...prev,
-          [data.user_id]: getCurrentUserDisplayName()
-        }));
-      }
     } catch (error: any) {
       console.error("Error loading post:", error);
       toast({
@@ -148,22 +126,6 @@ const PostDetailPage = () => {
       }
 
       setReplies(data || []);
-
-      // Set user names for reply authors if they're the current user
-      if (user && data) {
-        const currentUserName = getCurrentUserDisplayName();
-        const names: Record<string, string> = {};
-        
-        data.forEach((reply: any) => {
-          if (reply.user_id === user.id) {
-            names[reply.user_id] = currentUserName;
-          }
-        });
-        
-        if (Object.keys(names).length > 0) {
-          setUserNames(prev => ({ ...prev, ...names }));
-        }
-      }
     } catch (error) {
       console.error("Error loading replies:", error);
     }
@@ -258,12 +220,20 @@ const PostDetailPage = () => {
     try {
       setReplyLoading(true);
 
+      // Get user's display name
+      const displayName = user?.user_metadata?.display_name || 
+                         user?.user_metadata?.full_name || 
+                         user?.user_metadata?.name || 
+                         user?.email?.split('@')[0] || 
+                         'Anonymous';
+
       const { error } = await supabase
         .from("replies")
         .insert({
           post_id: parseInt(id!),
           content: newReply.trim(),
-          user_id: user.id
+          user_id: user.id,
+          author_name: displayName
         });
 
       if (error) {
@@ -409,7 +379,7 @@ const PostDetailPage = () => {
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <User className="h-4 w-4" />
-                      {getUserDisplayName(post.user_id)}
+                      {post.author_name}
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="h-4 w-4" />
@@ -548,7 +518,7 @@ const PostDetailPage = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <User className="h-4 w-4" />
-                          {getUserDisplayName(reply.user_id)}
+                          {reply.author_name}
                           <span>•</span>
                           <Clock className="h-4 w-4" />
                           {formatDate(reply.created_at)}

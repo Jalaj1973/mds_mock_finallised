@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS posts (
   content TEXT NOT NULL,
   subject TEXT NOT NULL,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  author_name TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -15,6 +16,7 @@ CREATE TABLE IF NOT EXISTS replies (
   post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  author_name TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

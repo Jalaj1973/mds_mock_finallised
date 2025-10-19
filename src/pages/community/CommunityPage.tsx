@@ -16,7 +16,7 @@ interface Post {
   title: string;
   content: string;
   subject: string;
-  user_id: string;
+  author_name: string;
   created_at: string;
   upvotes: number;
   downvotes: number;
@@ -32,27 +32,11 @@ const CommunityPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
-  const [userNames, setUserNames] = useState<Record<string, string>>({});
 
   const subjects = [
     "Anatomy", "Physiology", "Pathology", "Pharmacology", 
     "Microbiology", "Medicine", "General"
   ];
-
-  // Function to get user display name
-  const getUserDisplayName = (userId: string): string => {
-    return userNames[userId] || 'Loading...';
-  };
-
-  // Function to get user display name from current user context
-  const getCurrentUserDisplayName = (): string => {
-    if (!user) return 'Anonymous';
-    return user?.user_metadata?.display_name || 
-           user?.user_metadata?.full_name || 
-           user?.user_metadata?.name || 
-           user?.email?.split('@')[0] || 
-           'Anonymous';
-  };
 
   useEffect(() => {
     loadPosts();
@@ -70,7 +54,7 @@ const CommunityPage = () => {
           title,
           content,
           subject,
-          user_id,
+          author_name,
           created_at,
           votes!inner(vote_type),
           replies(id)
@@ -117,7 +101,7 @@ const CommunityPage = () => {
           title: post.title,
           content: post.content,
           subject: post.subject,
-          user_id: post.user_id,
+          author_name: post.author_name,
           created_at: post.created_at,
           upvotes,
           downvotes,
@@ -146,22 +130,6 @@ const CommunityPage = () => {
       }
 
       setPosts(filteredPosts);
-
-      // Set user names for post authors if they're the current user
-      if (user && filteredPosts.length > 0) {
-        const currentUserName = getCurrentUserDisplayName();
-        const names: Record<string, string> = {};
-        
-        filteredPosts.forEach((post) => {
-          if (post.user_id === user.id) {
-            names[post.user_id] = currentUserName;
-          }
-        });
-        
-        if (Object.keys(names).length > 0) {
-          setUserNames(prev => ({ ...prev, ...names }));
-        }
-      }
     } catch (error) {
       console.error("Error loading posts:", error);
     } finally {
@@ -359,7 +327,7 @@ const CommunityPage = () => {
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <User className="h-4 w-4" />
-                            {getUserDisplayName(post.user_id)}
+                            {post.author_name}
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
