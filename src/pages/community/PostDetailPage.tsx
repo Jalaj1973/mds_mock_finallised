@@ -23,7 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface Post {
-  id: number;
+  id: string;
   title: string;
   content: string;
   subject: string;
@@ -141,11 +141,14 @@ const PostDetailPage = () => {
 
       console.log("Raw post ID from URL:", id, "Type:", typeof id);
 
-      const postId = parseInt(id);
-      if (isNaN(postId) || postId <= 0) {
-        console.error("Invalid post ID:", id, "Parsed:", postId);
+      // For UUIDs, we don't need to parse as integer - just validate it's not empty
+      if (!id || id.trim() === '') {
+        console.error("Empty post ID:", id);
         throw new Error(`Invalid post ID: ${id}`);
       }
+
+      // Use the ID directly as a string for UUIDs
+      const postId = id;
 
       const from = page * REPLIES_PER_PAGE;
       const to = from + REPLIES_PER_PAGE - 1;
@@ -299,11 +302,14 @@ const PostDetailPage = () => {
 
       console.log("Raw post ID from URL:", id, "Type:", typeof id);
 
-      const postId = parseInt(id);
-      if (isNaN(postId) || postId <= 0) {
-        console.error("Invalid post ID:", id, "Parsed:", postId);
+      // For UUIDs, we don't need to parse as integer - just validate it's not empty
+      if (!id || id.trim() === '') {
+        console.error("Empty post ID:", id);
         throw new Error(`Invalid post ID: ${id}`);
       }
+
+      // Use the ID directly as a string for UUIDs
+      const postId = id;
 
       // Get user's display name
       const displayName = user?.user_metadata?.display_name || 

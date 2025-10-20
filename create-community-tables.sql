@@ -1,6 +1,6 @@
 -- Create posts table
 CREATE TABLE IF NOT EXISTS posts (
-  id SERIAL PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   title TEXT NOT NULL,
   content TEXT NOT NULL,
   subject TEXT NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS posts (
 -- Create replies table
 CREATE TABLE IF NOT EXISTS replies (
   id SERIAL PRIMARY KEY,
-  post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
+  post_id UUID REFERENCES posts(id) ON DELETE CASCADE,
   content TEXT NOT NULL,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   author_name TEXT NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS replies (
 -- Create votes table
 CREATE TABLE IF NOT EXISTS votes (
   id SERIAL PRIMARY KEY,
-  post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
+  post_id UUID REFERENCES posts(id) ON DELETE CASCADE,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   vote_type TEXT CHECK (vote_type IN ('up', 'down')) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

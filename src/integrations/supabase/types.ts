@@ -90,7 +90,7 @@ export type Database = {
       }
       posts: {
         Row: {
-          id: number
+          id: string
           title: string
           content: string
           subject: string
@@ -100,7 +100,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          id?: number
+          id?: string
           title: string
           content: string
           subject: string
@@ -110,7 +110,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          id?: number
+          id?: string
           title?: string
           content?: string
           subject?: string
@@ -132,7 +132,7 @@ export type Database = {
       replies: {
         Row: {
           id: number
-          post_id: number
+          post_id: string
           content: string
           user_id: string
           author_name: string
@@ -141,7 +141,7 @@ export type Database = {
         }
         Insert: {
           id?: number
-          post_id: number
+          post_id: string
           content: string
           user_id: string
           author_name: string
@@ -150,7 +150,7 @@ export type Database = {
         }
         Update: {
           id?: number
-          post_id?: number
+          post_id?: string
           content?: string
           user_id?: string
           author_name?: string
@@ -177,7 +177,7 @@ export type Database = {
       votes: {
         Row: {
           id: number
-          post_id: number
+          post_id: string
           user_id: string
           vote_type: string
           created_at: string
@@ -185,7 +185,7 @@ export type Database = {
         }
         Insert: {
           id?: number
-          post_id: number
+          post_id: string
           user_id: string
           vote_type: string
           created_at?: string
@@ -193,7 +193,7 @@ export type Database = {
         }
         Update: {
           id?: number
-          post_id?: number
+          post_id?: string
           user_id?: string
           vote_type?: string
           created_at?: string

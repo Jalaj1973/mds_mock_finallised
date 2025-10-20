@@ -13,7 +13,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { useToast } from "@/hooks/use-toast";
 
 interface Post {
-  id: number;
+  id: string;
   title: string;
   content: string;
   subject: string;
