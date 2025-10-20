@@ -130,13 +130,25 @@ const PostDetailPage = () => {
         setLoadingMore(true);
       }
 
+      // Validate post ID
+      if (!id) {
+        throw new Error("Post ID is missing");
+      }
+
+      const postId = parseInt(id);
+      if (isNaN(postId)) {
+        throw new Error("Invalid post ID");
+      }
+
       const from = page * REPLIES_PER_PAGE;
       const to = from + REPLIES_PER_PAGE - 1;
+
+      console.log("Loading replies for post_id:", postId, "page:", page);
 
       const { data, error, count } = await supabase
         .from("replies")
         .select("*", { count: 'exact' })
-        .eq("post_id", id)
+        .eq("post_id", postId)
         .order("created_at", { ascending: true })
         .range(from, to);
 
@@ -145,6 +157,12 @@ const PostDetailPage = () => {
       }
 
       const newReplies = data || [];
+      
+      console.log("Loaded replies:", {
+        count: newReplies.length,
+        totalCount: count,
+        replies: newReplies.map(r => ({ id: r.id, post_id: r.post_id, content: r.content.substring(0, 50) + "..." }))
+      });
       
       if (isInitialLoad) {
         setReplies(newReplies);
@@ -266,6 +284,16 @@ const PostDetailPage = () => {
     try {
       setReplyLoading(true);
 
+      // Validate post ID
+      if (!id) {
+        throw new Error("Post ID is missing");
+      }
+
+      const postId = parseInt(id);
+      if (isNaN(postId)) {
+        throw new Error("Invalid post ID");
+      }
+
       // Get user's display name
       const displayName = user?.user_metadata?.display_name || 
                          user?.user_metadata?.full_name || 
@@ -273,10 +301,17 @@ const PostDetailPage = () => {
                          user?.email?.split('@')[0] || 
                          'Anonymous';
 
+      console.log("Creating reply with:", {
+        post_id: postId,
+        user_id: user.id,
+        author_name: displayName,
+        content: newReply.trim()
+      });
+
       const { data, error } = await supabase
         .from("replies")
         .insert({
-          post_id: parseInt(id!),
+          post_id: postId,
           content: newReply.trim(),
           user_id: user.id,
           author_name: displayName
@@ -288,6 +323,14 @@ const PostDetailPage = () => {
         throw error;
       }
 
+      console.log("Reply created successfully:", {
+        id: data.id,
+        post_id: data.post_id,
+        user_id: data.user_id,
+        author_name: data.author_name,
+        content: data.content.substring(0, 50) + "..."
+      });
+
       // Immediately add the new reply to the UI
       const newReplyData: Reply = {
         id: data.id,
@@ -298,7 +341,11 @@ const PostDetailPage = () => {
         updated_at: data.updated_at
       };
 
-      setReplies(prev => [...prev, newReplyData]);
+      setReplies(prev => {
+        const updated = [...prev, newReplyData];
+        console.log("Updated replies list:", updated.length, "replies");
+        return updated;
+      });
 
       toast({
         title: "Reply Posted",
@@ -306,6 +353,12 @@ const PostDetailPage = () => {
       });
 
       setNewReply("");
+
+      // Refresh replies to ensure persistence
+      setTimeout(() => {
+        console.log("Refreshing replies to verify persistence...");
+        loadReplies(0, true);
+      }, 1000);
     } catch (error: any) {
       console.error("Error posting reply:", error);
       toast({
