@@ -63,6 +63,7 @@ const PostDetailPage = () => {
   const REPLIES_PER_PAGE = 5;
 
   useEffect(() => {
+    console.log("PostDetailPage mounted/updated with id:", id, "Type:", typeof id, "URL:", window.location.href);
     if (id) {
       loadPost();
       // Reset pagination state when post changes
@@ -70,6 +71,8 @@ const PostDetailPage = () => {
       setRepliesPage(0);
       setHasMoreReplies(true);
       loadReplies(0, true);
+    } else {
+      console.error("No post ID found in URL parameters");
     }
   }, [id]);
 
@@ -132,12 +135,16 @@ const PostDetailPage = () => {
 
       // Validate post ID
       if (!id) {
+        console.error("Post ID is missing from URL params");
         throw new Error("Post ID is missing");
       }
 
+      console.log("Raw post ID from URL:", id, "Type:", typeof id);
+
       const postId = parseInt(id);
-      if (isNaN(postId)) {
-        throw new Error("Invalid post ID");
+      if (isNaN(postId) || postId <= 0) {
+        console.error("Invalid post ID:", id, "Parsed:", postId);
+        throw new Error(`Invalid post ID: ${id}`);
       }
 
       const from = page * REPLIES_PER_PAGE;
@@ -286,12 +293,16 @@ const PostDetailPage = () => {
 
       // Validate post ID
       if (!id) {
+        console.error("Post ID is missing from URL params");
         throw new Error("Post ID is missing");
       }
 
+      console.log("Raw post ID from URL:", id, "Type:", typeof id);
+
       const postId = parseInt(id);
-      if (isNaN(postId)) {
-        throw new Error("Invalid post ID");
+      if (isNaN(postId) || postId <= 0) {
+        console.error("Invalid post ID:", id, "Parsed:", postId);
+        throw new Error(`Invalid post ID: ${id}`);
       }
 
       // Get user's display name
