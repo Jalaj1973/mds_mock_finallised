@@ -72,7 +72,7 @@ const PostDetailPage = () => {
         .from("posts")
         .select(`
           *,
-          votes!inner(vote_type)
+          votes(vote_type)
         `)
         .eq("id", id)
         .single();
@@ -87,8 +87,8 @@ const PostDetailPage = () => {
       
       // Get user's vote if they're logged in
       let userVote: 'up' | 'down' | undefined;
-      if (user) {
-        const userVoteData = data.votes?.find((v: any) => v.vote_type && user.id);
+      if (user && data.votes) {
+        const userVoteData = data.votes.find((v: any) => v.user_id === user.id);
         if (userVoteData) {
           userVote = userVoteData.vote_type as 'up' | 'down';
         }

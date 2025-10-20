@@ -56,7 +56,7 @@ const CommunityPage = () => {
           subject,
           author_name,
           created_at,
-          votes!inner(vote_type),
+          votes(vote_type),
           replies(id)
         `);
 
@@ -89,8 +89,8 @@ const CommunityPage = () => {
         
         // Get user's vote if they're logged in
         let userVote: 'up' | 'down' | undefined;
-        if (user) {
-          const userVoteData = post.votes?.find(v => v.vote_type && user.id);
+        if (user && post.votes) {
+          const userVoteData = post.votes.find((v: any) => v.user_id === user.id);
           if (userVoteData) {
             userVote = userVoteData.vote_type as 'up' | 'down';
           }
