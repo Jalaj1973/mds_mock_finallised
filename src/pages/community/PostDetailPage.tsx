@@ -56,11 +56,20 @@ const PostDetailPage = () => {
   const [replyLoading, setReplyLoading] = useState(false);
   const [newReply, setNewReply] = useState("");
   const [voteLoading, setVoteLoading] = useState(false);
+  const [repliesLoading, setRepliesLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMoreReplies, setHasMoreReplies] = useState(true);
+  const [repliesPage, setRepliesPage] = useState(0);
+  const REPLIES_PER_PAGE = 5;
 
   useEffect(() => {
     if (id) {
       loadPost();
-      loadReplies();
+      // Reset pagination state when post changes
+      setReplies([]);
+      setRepliesPage(0);
+      setHasMoreReplies(true);
+      loadReplies(0, true);
     }
   }, [id]);
 
@@ -113,19 +122,43 @@ const PostDetailPage = () => {
     }
   };
 
-  const loadReplies = async () => {
+  const loadReplies = async (page: number = 0, isInitialLoad: boolean = false) => {
     try {
-      const { data, error } = await supabase
+      if (isInitialLoad) {
+        setRepliesLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+
+      const from = page * REPLIES_PER_PAGE;
+      const to = from + REPLIES_PER_PAGE - 1;
+
+      const { data, error, count } = await supabase
         .from("replies")
-        .select("*")
+        .select("*", { count: 'exact' })
         .eq("post_id", id)
-        .order("created_at", { ascending: true });
+        .order("created_at", { ascending: true })
+        .range(from, to);
 
       if (error) {
         throw error;
       }
 
-      setReplies(data || []);
+      const newReplies = data || [];
+      
+      if (isInitialLoad) {
+        setReplies(newReplies);
+        setRepliesPage(0);
+      } else {
+        setReplies(prev => [...prev, ...newReplies]);
+        setRepliesPage(page);
+      }
+
+      // Check if there are more replies to load
+      const totalReplies = count || 0;
+      const loadedReplies = (page + 1) * REPLIES_PER_PAGE;
+      setHasMoreReplies(loadedReplies < totalReplies);
+
     } catch (error: any) {
       console.error("Error loading replies:", error);
       toast({
@@ -133,7 +166,15 @@ const PostDetailPage = () => {
         description: error.message || "Failed to load replies. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setRepliesLoading(false);
+      setLoadingMore(false);
     }
+  };
+
+  const loadMoreReplies = async () => {
+    if (loadingMore || !hasMoreReplies) return;
+    await loadReplies(repliesPage + 1, false);
   };
 
   const handleVote = async (voteType: 'up' | 'down') => {
@@ -232,18 +273,32 @@ const PostDetailPage = () => {
                          user?.email?.split('@')[0] || 
                          'Anonymous';
 
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("replies")
         .insert({
           post_id: parseInt(id!),
           content: newReply.trim(),
           user_id: user.id,
           author_name: displayName
-        });
+        })
+        .select()
+        .single();
 
       if (error) {
         throw error;
       }
+
+      // Immediately add the new reply to the UI
+      const newReplyData: Reply = {
+        id: data.id,
+        content: data.content,
+        author_name: data.author_name,
+        user_id: data.user_id,
+        created_at: data.created_at,
+        updated_at: data.updated_at
+      };
+
+      setReplies(prev => [...prev, newReplyData]);
 
       toast({
         title: "Reply Posted",
@@ -251,7 +306,6 @@ const PostDetailPage = () => {
       });
 
       setNewReply("");
-      loadReplies();
     } catch (error: any) {
       console.error("Error posting reply:", error);
       toast({
@@ -442,7 +496,7 @@ const PostDetailPage = () => {
           <div className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5" />
             <h2 className="text-xl font-semibold">
-              Replies ({replies.length})
+              Replies {repliesLoading ? "..." : `(${replies.length})`}
             </h2>
           </div>
 
@@ -501,7 +555,14 @@ const PostDetailPage = () => {
 
           {/* Replies List */}
           <div className="space-y-4">
-            {replies.length === 0 ? (
+            {repliesLoading ? (
+              <Card>
+                <CardContent className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                  <p className="text-muted-foreground">Loading replies...</p>
+                </CardContent>
+              </Card>
+            ) : replies.length === 0 ? (
               <Card>
                 <CardContent className="text-center py-8">
                   <MessageSquare className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -511,31 +572,54 @@ const PostDetailPage = () => {
                 </CardContent>
               </Card>
             ) : (
-              replies.map((reply, index) => (
-                <motion.div
-                  key={reply.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                >
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <User className="h-4 w-4" />
-                          {reply.author_name}
-                          <span>•</span>
-                          <Clock className="h-4 w-4" />
-                          {formatDate(reply.created_at)}
+              <>
+                {replies.map((reply, index) => (
+                  <motion.div
+                    key={reply.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                  >
+                    <Card>
+                      <CardHeader className="pb-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <User className="h-4 w-4" />
+                            {reply.author_name}
+                            <span>•</span>
+                            <Clock className="h-4 w-4" />
+                            {formatDate(reply.created_at)}
+                          </div>
                         </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="whitespace-pre-wrap">{reply.content}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))
+                      </CardHeader>
+                      <CardContent>
+                        <p className="whitespace-pre-wrap">{reply.content}</p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+                
+                {/* Load More Button */}
+                {hasMoreReplies && (
+                  <div className="flex justify-center pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={loadMoreReplies}
+                      disabled={loadingMore}
+                      className="min-w-[120px]"
+                    >
+                      {loadingMore ? (
+                        <div className="flex items-center gap-2">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+                          Loading...
+                        </div>
+                      ) : (
+                        "Load more replies"
+                      )}
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
