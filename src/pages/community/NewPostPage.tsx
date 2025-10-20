@@ -103,28 +103,23 @@ const NewPostPage = () => {
       {/* Header */}
       <header className="sticky top-0 z-40 w-full backdrop-blur supports-[backdrop-filter]:bg-background/70 bg-background/80 border-b">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-3">
             <img 
               src="/hands-bandaid.png" 
               alt="medsPG Logo" 
-              className="h-8 w-8 sm:h-12 sm:w-12 object-contain"
+              className="h-12 w-12 object-contain"
             />
-            <span className="font-semibold text-base sm:text-lg tracking-tight">
-              <span className="hidden sm:inline">Create New Post</span>
-              <span className="sm:hidden">New Post</span>
-            </span>
+            <span className="font-semibold text-lg tracking-tight">Create New Post</span>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-3">
             <ThemeToggle />
             <Button 
               variant="outline" 
               onClick={() => navigate("/community")}
               size="sm"
-              className="text-xs sm:text-sm"
             >
-              <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
-              <span className="hidden sm:inline">Back to Community</span>
-              <span className="sm:hidden">Back</span>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Community
             </Button>
           </div>
         </div>
@@ -134,8 +129,8 @@ const NewPostPage = () => {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl sm:text-2xl">Create a New Discussion</CardTitle>
-            <p className="text-sm sm:text-base text-muted-foreground">
+            <CardTitle className="text-2xl">Create a New Discussion</CardTitle>
+            <p className="text-muted-foreground">
               Share your thoughts, ask questions, or start a discussion with fellow medical students.
             </p>
           </CardHeader>
@@ -143,23 +138,23 @@ const NewPostPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Title */}
               <div className="space-y-2">
-                <Label htmlFor="title" className="text-sm sm:text-base">Post Title *</Label>
+                <Label htmlFor="title">Post Title *</Label>
                 <Input
                   id="title"
                   value={formData.title}
                   onChange={(e) => handleInputChange("title", e.target.value)}
                   placeholder="Enter a descriptive title for your post..."
-                  className="text-base sm:text-lg"
+                  className="text-lg"
                   maxLength={200}
                 />
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {formData.title.length}/200 characters
                 </p>
               </div>
 
               {/* Subject */}
               <div className="space-y-2">
-                <Label htmlFor="subject" className="text-sm sm:text-base">Subject *</Label>
+                <Label htmlFor="subject">Subject *</Label>
                 <Select 
                   value={formData.subject} 
                   onValueChange={(value) => handleInputChange("subject", value)}
@@ -179,24 +174,24 @@ const NewPostPage = () => {
 
               {/* Content */}
               <div className="space-y-2">
-                <Label htmlFor="content" className="text-sm sm:text-base">Post Content *</Label>
+                <Label htmlFor="content">Post Content *</Label>
                 <Textarea
                   id="content"
                   value={formData.content}
                   onChange={(e) => handleInputChange("content", e.target.value)}
                   placeholder="Write your post content here. Be clear, helpful, and respectful..."
-                  className="min-h-[150px] sm:min-h-[200px] resize-none text-sm sm:text-base"
+                  className="min-h-[200px] resize-none"
                   maxLength={5000}
                 />
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {formData.content.length}/5000 characters
                 </p>
               </div>
 
               {/* Guidelines */}
-              <div className="bg-muted/50 rounded-lg p-3 sm:p-4">
-                <h4 className="font-semibold mb-2 text-sm sm:text-base">Community Guidelines</h4>
-                <ul className="text-xs sm:text-sm text-muted-foreground space-y-1">
+              <div className="bg-muted/50 rounded-lg p-4">
+                <h4 className="font-semibold mb-2">Community Guidelines</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
                   <li>• Be respectful and professional in your discussions</li>
                   <li>• Stay on topic and relevant to medical education</li>
                   <li>• Provide helpful and accurate information</li>
@@ -206,32 +201,29 @@ const NewPostPage = () => {
               </div>
 
               {/* Submit Button */}
-              <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
+              <div className="flex justify-end gap-4">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() => navigate("/community")}
                   disabled={loading}
-                  className="w-full sm:w-auto"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   disabled={loading || !formData.title.trim() || !formData.subject || !formData.content.trim()}
-                  className="min-w-[100px] sm:min-w-[120px] w-full sm:w-auto"
+                  className="min-w-[120px]"
                 >
                   {loading ? (
                     <div className="flex items-center gap-2">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span className="hidden sm:inline">Creating...</span>
-                      <span className="sm:hidden">Create...</span>
+                      Creating...
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">
                       <Send className="h-4 w-4" />
-                      <span className="hidden sm:inline">Create Post</span>
-                      <span className="sm:hidden">Create</span>
+                      Create Post
                     </div>
                   )}
                 </Button>
