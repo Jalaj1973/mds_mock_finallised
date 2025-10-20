@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MessageSquare, Plus, ThumbsUp, ThumbsDown, Clock, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useToast } from "@/hooks/use-toast";
 
 interface Post {
   id: number;
@@ -27,8 +28,10 @@ interface Post {
 const CommunityPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [voteLoading, setVoteLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
@@ -56,7 +59,7 @@ const CommunityPage = () => {
           subject,
           author_name,
           created_at,
-          votes(vote_type),
+          votes(vote_type, user_id),
           replies(id)
         `);
 
@@ -143,7 +146,10 @@ const CommunityPage = () => {
       return;
     }
 
+    if (voteLoading) return; // Prevent multiple clicks
+
     try {
+      setVoteLoading(true);
       // Check if user already voted
       const { data: existingVote } = await supabase
         .from("votes")
@@ -180,8 +186,15 @@ const CommunityPage = () => {
 
       // Reload posts to update vote counts
       loadPosts();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error voting:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to vote. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setVoteLoading(false);
     }
   };
 
@@ -345,6 +358,7 @@ const CommunityPage = () => {
                               e.stopPropagation();
                               handleVote(post.id, 'up');
                             }}
+                            disabled={voteLoading}
                             className={`p-1 ${post.user_vote === 'up' ? 'text-green-600' : ''}`}
                           >
                             <ThumbsUp className="h-4 w-4" />
@@ -359,6 +373,7 @@ const CommunityPage = () => {
                               e.stopPropagation();
                               handleVote(post.id, 'down');
                             }}
+                            disabled={voteLoading}
                             className={`p-1 ${post.user_vote === 'down' ? 'text-red-600' : ''}`}
                           >
                             <ThumbsDown className="h-4 w-4" />

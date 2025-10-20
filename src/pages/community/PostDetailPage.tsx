@@ -72,7 +72,7 @@ const PostDetailPage = () => {
         .from("posts")
         .select(`
           *,
-          votes(vote_type)
+          votes(vote_type, user_id)
         `)
         .eq("id", id)
         .single();
@@ -126,8 +126,13 @@ const PostDetailPage = () => {
       }
 
       setReplies(data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error loading replies:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to load replies. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
