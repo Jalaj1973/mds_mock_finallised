@@ -464,23 +464,28 @@ const PostDetailPage = () => {
       {/* Header */}
       <header className="sticky top-0 z-40 w-full backdrop-blur supports-[backdrop-filter]:bg-background/70 bg-background/80 border-b">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <img 
               src="/hands-bandaid.png" 
               alt="medsPG Logo" 
-              className="h-12 w-12 object-contain"
+              className="h-8 w-8 sm:h-12 sm:w-12 object-contain"
             />
-            <span className="font-semibold text-lg tracking-tight">Community Post</span>
+            <span className="font-semibold text-base sm:text-lg tracking-tight">
+              <span className="hidden sm:inline">Community Post</span>
+              <span className="sm:hidden">Post</span>
+            </span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <ThemeToggle />
             <Button 
               variant="outline" 
               onClick={() => navigate("/community")}
               size="sm"
+              className="text-xs sm:text-sm"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Community
+              <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Back to Community</span>
+              <span className="sm:hidden">Back</span>
             </Button>
           </div>
         </div>
@@ -496,38 +501,38 @@ const PostDetailPage = () => {
         >
           <Card className="mb-6">
             <CardHeader className="pb-4">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="secondary">{post.subject}</Badge>
-                    <span className="text-sm text-muted-foreground">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <Badge variant="secondary" className="text-xs">{post.subject}</Badge>
+                    <span className="text-xs sm:text-sm text-muted-foreground">
                       {formatDate(post.created_at)}
                     </span>
                   </div>
-                  <CardTitle className="text-2xl mb-3">{post.title}</CardTitle>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <CardTitle className="text-xl sm:text-2xl mb-3 break-words">{post.title}</CardTitle>
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <User className="h-4 w-4" />
-                      {post.author_name}
+                      <span className="truncate">{post.author_name}</span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {formatDate(post.created_at)}
+                      <MessageSquare className="h-4 w-4" />
+                      <span>{replies.length} replies</span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 ml-4">
+                <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                   <div className="flex items-center gap-1">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => handleVote('up')}
                       disabled={voteLoading}
-                      className={`p-2 ${post.user_vote === 'up' ? 'text-green-600' : ''}`}
+                      className={`p-1 sm:p-2 h-8 w-8 sm:h-10 sm:w-10 ${post.user_vote === 'up' ? 'text-green-600' : ''}`}
                     >
-                      <ThumbsUp className="h-4 w-4" />
+                      <ThumbsUp className="h-4 w-4 sm:h-5 sm:w-5" />
                     </Button>
-                    <span className="text-lg font-medium min-w-[3rem] text-center">
+                    <span className="text-sm sm:text-lg font-bold min-w-[2rem] sm:min-w-[3rem] text-center">
                       {post.upvotes - post.downvotes}
                     </span>
                     <Button
@@ -535,9 +540,9 @@ const PostDetailPage = () => {
                       size="sm"
                       onClick={() => handleVote('down')}
                       disabled={voteLoading}
-                      className={`p-2 ${post.user_vote === 'down' ? 'text-red-600' : ''}`}
+                      className={`p-1 sm:p-2 h-8 w-8 sm:h-10 sm:w-10 ${post.user_vote === 'down' ? 'text-red-600' : ''}`}
                     >
-                      <ThumbsDown className="h-4 w-4" />
+                      <ThumbsDown className="h-4 w-4 sm:h-5 sm:w-5" />
                     </Button>
                   </div>
                   {user && user.id === post.user_id && (
@@ -545,7 +550,7 @@ const PostDetailPage = () => {
                       variant="ghost"
                       size="sm"
                       onClick={handleDeletePost}
-                      className="text-red-600 hover:text-red-700"
+                      className="text-red-600 hover:text-red-700 h-8 w-8 sm:h-10 sm:w-10 p-0"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -555,7 +560,7 @@ const PostDetailPage = () => {
             </CardHeader>
             <CardContent>
               <div className="prose prose-gray dark:prose-invert max-w-none">
-                <p className="whitespace-pre-wrap">{post.content}</p>
+                <p className="text-sm sm:text-base whitespace-pre-wrap break-words">{post.content}</p>
               </div>
             </CardContent>
           </Card>
@@ -564,8 +569,8 @@ const PostDetailPage = () => {
         {/* Replies Section */}
         <div className="space-y-6">
           <div className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
-            <h2 className="text-xl font-semibold">
+            <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5" />
+            <h2 className="text-lg sm:text-xl font-semibold">
               Replies {repliesLoading ? "..." : `(${replies.length})`}
             </h2>
           </div>
@@ -573,8 +578,8 @@ const PostDetailPage = () => {
           {/* Reply Form */}
           {user ? (
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Add a Reply</CardTitle>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base sm:text-lg">Add a Reply</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleReply} className="space-y-4">
@@ -582,27 +587,29 @@ const PostDetailPage = () => {
                     value={newReply}
                     onChange={(e) => setNewReply(e.target.value)}
                     placeholder="Write your reply here..."
-                    className="min-h-[100px] resize-none"
+                    className="min-h-[80px] sm:min-h-[100px] resize-none text-sm sm:text-base"
                     maxLength={2000}
                   />
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm text-muted-foreground">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       {newReply.length}/2000 characters
                     </p>
                     <Button
                       type="submit"
                       disabled={replyLoading || !newReply.trim()}
-                      className="min-w-[100px]"
+                      className="min-w-[80px] sm:min-w-[100px] text-sm"
                     >
                       {replyLoading ? (
                         <div className="flex items-center gap-2">
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                          Posting...
+                          <span className="hidden sm:inline">Posting...</span>
+                          <span className="sm:hidden">Post...</span>
                         </div>
                       ) : (
                         <div className="flex items-center gap-2">
                           <Send className="h-4 w-4" />
-                          Reply
+                          <span className="hidden sm:inline">Reply</span>
+                          <span className="sm:hidden">Reply</span>
                         </div>
                       )}
                     </Button>
@@ -653,17 +660,18 @@ const PostDetailPage = () => {
                     <Card>
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground">
                             <User className="h-4 w-4" />
-                            {reply.author_name}
-                            <span>•</span>
+                            <span className="truncate">{reply.author_name}</span>
+                            <span className="hidden sm:inline">•</span>
                             <Clock className="h-4 w-4" />
-                            {formatDate(reply.created_at)}
+                            <span className="hidden sm:inline">{formatDate(reply.created_at)}</span>
+                            <span className="sm:hidden">{formatDate(reply.created_at).split(' ')[0]}</span>
                           </div>
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <p className="whitespace-pre-wrap">{reply.content}</p>
+                        <p className="text-sm sm:text-base whitespace-pre-wrap break-words">{reply.content}</p>
                       </CardContent>
                     </Card>
                   </motion.div>
@@ -676,15 +684,17 @@ const PostDetailPage = () => {
                       variant="outline"
                       onClick={loadMoreReplies}
                       disabled={loadingMore}
-                      className="min-w-[120px]"
+                      className="min-w-[100px] sm:min-w-[120px] text-sm"
                     >
                       {loadingMore ? (
                         <div className="flex items-center gap-2">
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
-                          Loading...
+                          <span className="hidden sm:inline">Loading...</span>
+                          <span className="sm:hidden">Load...</span>
                         </div>
                       ) : (
-                        "Load more replies"
+                        <span className="hidden sm:inline">Load more replies</span>
+                        <span className="sm:hidden">Load more</span>
                       )}
                     </Button>
                   </div>

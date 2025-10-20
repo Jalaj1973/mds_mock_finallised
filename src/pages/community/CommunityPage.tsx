@@ -225,31 +225,37 @@ const CommunityPage = () => {
       {/* Header */}
       <header className="sticky top-0 z-40 w-full backdrop-blur supports-[backdrop-filter]:bg-background/70 bg-background/80 border-b">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <img 
               src="/hands-bandaid.png" 
               alt="medsPG Logo" 
-              className="h-12 w-12 object-contain"
+              className="h-8 w-8 sm:h-12 sm:w-12 object-contain"
             />
-            <span className="font-semibold text-lg tracking-tight">MedsPG Community</span>
+            <span className="font-semibold text-base sm:text-lg tracking-tight">
+              <span className="hidden sm:inline">MedsPG Community</span>
+              <span className="sm:hidden">Community</span>
+            </span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <ThemeToggle />
             <Button 
               variant="outline" 
               onClick={() => navigate("/dashboard")}
               size="sm"
+              className="text-xs sm:text-sm"
             >
-              Back to Dashboard
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Back</span>
             </Button>
             {user && (
               <Button 
                 onClick={() => navigate("/community/new")}
-                className="flex items-center gap-2"
+                className="flex items-center gap-1 sm:gap-2"
                 size="sm"
               >
                 <Plus className="h-4 w-4" />
-                New Post
+                <span className="hidden sm:inline">New Post</span>
+                <span className="sm:hidden">New</span>
               </Button>
             )}
           </div>
@@ -259,26 +265,26 @@ const CommunityPage = () => {
       {/* Main Content */}
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Title */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Community Discussions</h1>
-          <p className="text-muted-foreground">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">Community Discussions</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
             Connect with fellow medical students, share insights, and get help with your studies.
           </p>
         </div>
 
         {/* Filters and Search */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="flex-1">
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="w-full">
             <Input
               placeholder="Search posts..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="max-w-md"
+              className="w-full"
             />
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Select value={subjectFilter} onValueChange={setSubjectFilter}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-full sm:w-40">
                 <SelectValue placeholder="Subject" />
               </SelectTrigger>
               <SelectContent>
@@ -289,7 +295,7 @@ const CommunityPage = () => {
               </SelectContent>
             </Select>
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-full sm:w-40">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -332,24 +338,25 @@ const CommunityPage = () => {
                 <Card className="hover:shadow-lg transition-shadow cursor-pointer"
                       onClick={() => navigate(`/community/post/${post.id}`)}>
                   <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="text-xl mb-2 line-clamp-2">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-lg sm:text-xl mb-2 line-clamp-2">
                           {post.title}
                         </CardTitle>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <User className="h-4 w-4" />
-                            {post.author_name}
+                            <span className="truncate">{post.author_name}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
-                            {formatDate(post.created_at)}
+                            <span className="hidden sm:inline">{formatDate(post.created_at)}</span>
+                            <span className="sm:hidden">{formatDate(post.created_at).split(' ')[0]}</span>
                           </div>
-                          <Badge variant="secondary">{post.subject}</Badge>
+                          <Badge variant="secondary" className="text-xs">{post.subject}</Badge>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 ml-4">
+                      <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                         <div className="flex items-center gap-1">
                           <Button
                             variant="ghost"
@@ -359,7 +366,7 @@ const CommunityPage = () => {
                               handleVote(post.id, 'up');
                             }}
                             disabled={voteLoading}
-                            className={`p-1 ${post.user_vote === 'up' ? 'text-green-600' : ''}`}
+                            className={`p-1 h-8 w-8 ${post.user_vote === 'up' ? 'text-green-600' : ''}`}
                           >
                             <ThumbsUp className="h-4 w-4" />
                           </Button>
@@ -374,20 +381,21 @@ const CommunityPage = () => {
                               handleVote(post.id, 'down');
                             }}
                             disabled={voteLoading}
-                            className={`p-1 ${post.user_vote === 'down' ? 'text-red-600' : ''}`}
+                            className={`p-1 h-8 w-8 ${post.user_vote === 'down' ? 'text-red-600' : ''}`}
                           >
                             <ThumbsDown className="h-4 w-4" />
                           </Button>
                         </div>
                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
                           <MessageSquare className="h-4 w-4" />
-                          {post.reply_count}
+                          <span className="hidden sm:inline">{post.reply_count} replies</span>
+                          <span className="sm:hidden">{post.reply_count}</span>
                         </div>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground line-clamp-3">
+                    <p className="text-muted-foreground line-clamp-3 text-sm sm:text-base">
                       {post.content}
                     </p>
                   </CardContent>
