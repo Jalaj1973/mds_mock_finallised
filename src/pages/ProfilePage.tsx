@@ -109,13 +109,34 @@ const ProfilePage = () => {
           last_name_change: null
         };
 
+        // Try to create profile with upsert to handle RLS issues
         const { data: createdProfile, error: createError } = await supabase
           .from("profiles")
-          .insert(newProfile)
+          .upsert(newProfile, { 
+            onConflict: 'id',
+            ignoreDuplicates: false 
+          })
           .select()
           .single();
 
         if (createError) {
+          console.error("Error creating profile:", createError);
+          // If profile creation fails, try to fetch it again in case it was created by trigger
+          const { data: retryProfile } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", user!.id)
+            .single();
+          
+          if (retryProfile) {
+            setProfile(retryProfile);
+            setDisplayName(retryProfile.display_name || "");
+            setCollege(retryProfile.college || "");
+            setYear(retryProfile.year || "");
+            setStatus(retryProfile.status || "");
+            return;
+          }
+          
           throw createError;
         }
 
