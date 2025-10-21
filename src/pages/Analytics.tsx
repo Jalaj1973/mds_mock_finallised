@@ -5,9 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, TrendingUp, Target, Calendar, Clock } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import { ArrowLeft, TrendingUp, Target, Calendar, Clock, BarChart3, Activity, Award, BookOpen } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area } from "recharts";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface TestResult {
   id: string;
@@ -75,10 +76,26 @@ const Analytics = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-light flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-muted-foreground">Loading analytics...</p>
-        </div>
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div 
+            className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+          <motion.p 
+            className="mt-4 text-muted-foreground text-lg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            Loading your analytics...
+          </motion.p>
+        </motion.div>
       </div>
     );
   }
@@ -152,7 +169,12 @@ const Analytics = () => {
     <div className="min-h-screen bg-gradient-light p-2 sm:p-4">
       <div className="max-w-7xl mx-auto">
         {/* Top App Bar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-card/90 backdrop-blur rounded-xl border shadow-lg px-3 sm:px-4 py-3 mb-4 sm:mb-6 gap-3 sm:gap-0">
+        <motion.div 
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-card/90 backdrop-blur rounded-xl border shadow-lg px-3 sm:px-4 py-3 mb-4 sm:mb-6 gap-3 sm:gap-0"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="flex items-center gap-3">
             <img 
               src="/hands-bandaid.png" 
@@ -174,182 +196,379 @@ const Analytics = () => {
               <span className="sm:hidden">Back</span>
             </Button>
           </div>
-        </div>
+        </motion.div>
 
-          {results.length === 0 ? (
-            <Card className="rounded-2xl shadow-sm">
-              <CardContent className="pt-6">
-                <div className="text-center space-y-4">
-                  <Target className="h-12 w-12 text-muted-foreground mx-auto" />
-                  <p className="text-lg font-medium">No test results yet</p>
-                  <p className="text-muted-foreground">Take some tests to see your analytics here</p>
-                  <Button onClick={() => navigate("/dashboard")}>
-                    Start Your First Test
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
+          <AnimatePresence mode="wait">
+            {results.length === 0 ? (
+              <motion.div
+                key="empty-state"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Card className="rounded-2xl shadow-sm">
+                  <CardContent className="pt-6">
+                    <div className="text-center space-y-4">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                      >
+                        <Target className="h-16 w-16 text-muted-foreground mx-auto" />
+                      </motion.div>
+                      <motion.p 
+                        className="text-xl font-medium"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                      >
+                        No test results yet
+                      </motion.p>
+                      <motion.p 
+                        className="text-muted-foreground"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                      >
+                        Take some tests to see your analytics here
+                      </motion.p>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                      >
+                        <Button onClick={() => navigate("/dashboard")} size="lg">
+                          Start Your First Test
+                        </Button>
+                      </motion.div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ) : (
             <>
               {/* Performance Overview Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                <Card className="rounded-2xl shadow-sm">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-xs sm:text-sm font-medium">Total Tests</CardTitle>
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-xl sm:text-2xl font-bold">{results.length}</div>
-                  </CardContent>
-                </Card>
+              <motion.div 
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                >
+                  <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/20 dark:to-blue-900/20">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-xs sm:text-sm font-medium">Total Tests</CardTitle>
+                      <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    </CardHeader>
+                    <CardContent>
+                      <motion.div 
+                        className="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                      >
+                        {results.length}
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
 
-                <Card className="rounded-2xl shadow-sm">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-xs sm:text-sm font-medium">Average Score</CardTitle>
-                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-xl sm:text-2xl font-bold">
-                      {results.length > 0 
-                        ? Math.round(results.reduce((sum, r) => sum + r.score_percent, 0) / results.length)
-                        : 0}%
-                    </div>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                >
+                  <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-xs sm:text-sm font-medium">Average Score</CardTitle>
+                      <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
+                    </CardHeader>
+                    <CardContent>
+                      <motion.div 
+                        className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+                      >
+                        {results.length > 0 
+                          ? Math.round(results.reduce((sum, r) => sum + r.score_percent, 0) / results.length)
+                          : 0}%
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
 
-                <Card className="rounded-2xl shadow-sm">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-xs sm:text-sm font-medium">Avg Time/Question</CardTitle>
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-xl sm:text-2xl font-bold">
-                      {formatTime(averageTimePerQuestion)}
-                    </div>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                >
+                  <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-xs sm:text-sm font-medium">Avg Time/Question</CardTitle>
+                      <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                    </CardHeader>
+                    <CardContent>
+                      <motion.div 
+                        className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+                      >
+                        {formatTime(averageTimePerQuestion)}
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
 
-                <Card className="rounded-2xl shadow-sm">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-xs sm:text-sm font-medium">Subjects Covered</CardTitle>
-                    <Target className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-xl sm:text-2xl font-bold">{subjectAverages.length}</div>
-                  </CardContent>
-                </Card>
-              </div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                >
+                  <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-xs sm:text-sm font-medium">Subjects Covered</CardTitle>
+                      <Target className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                    </CardHeader>
+                    <CardContent>
+                      <motion.div 
+                        className="text-xl sm:text-2xl font-bold text-orange-600 dark:text-orange-400"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+                      >
+                        {subjectAverages.length}
+                      </motion.div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </motion.div>
 
               {/* Charts Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+              <motion.div 
+                className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
                 {/* Performance Trend Chart */}
-                <Card className="rounded-2xl shadow-sm">
-                  <CardHeader>
-                    <CardTitle className="text-base sm:text-lg">Performance Trend</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-[250px] sm:h-[300px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={trendData}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="test" fontSize={12} />
-                          <YAxis domain={[0, 100]} fontSize={12} />
-                          <Tooltip
-                            formatter={(value) => [String(value) + "%", "Score"]}
-                            labelFormatter={(label) => {
-                              const d = trendData.find((x) => x.test === label);
-                              const subject = d ? d.subject : "";
-                              const date = d ? d.date : "";
-                              return label + " - " + subject + " (" + date + ")";
-                            }}
-                          />
-                          <Line 
-                            type="monotone" 
-                            dataKey="score" 
-                            stroke="hsl(var(--primary))" 
-                            strokeWidth={2}
-                            dot={{ fill: "hsl(var(--primary))", strokeWidth: 2 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </CardContent>
-                </Card>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.7 }}
+                  whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
+                >
+                  <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 dark:from-blue-950/10 dark:to-indigo-950/10">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30">
+                          <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <CardTitle className="text-lg font-semibold">Performance Trend</CardTitle>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-[280px] sm:h-[320px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <AreaChart data={trendData}>
+                            <defs>
+                              <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                              </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                            <XAxis 
+                              dataKey="test" 
+                              fontSize={12} 
+                              stroke="hsl(var(--muted-foreground))"
+                              tickLine={false}
+                              axisLine={false}
+                            />
+                            <YAxis 
+                              domain={[0, 100]} 
+                              fontSize={12} 
+                              stroke="hsl(var(--muted-foreground))"
+                              tickLine={false}
+                              axisLine={false}
+                            />
+                            <Tooltip
+                              contentStyle={{
+                                backgroundColor: 'hsl(var(--card))',
+                                border: '1px solid hsl(var(--border))',
+                                borderRadius: '12px',
+                                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                              }}
+                              formatter={(value) => [String(value) + "%", "Score"]}
+                              labelFormatter={(label) => {
+                                const d = trendData.find((x) => x.test === label);
+                                const subject = d ? d.subject : "";
+                                const date = d ? d.date : "";
+                                return label + " - " + subject + " (" + date + ")";
+                              }}
+                            />
+                            <Area
+                              type="monotone"
+                              dataKey="score"
+                              stroke="hsl(var(--primary))"
+                              strokeWidth={3}
+                              fill="url(#colorScore)"
+                              dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
+                              activeDot={{ r: 6, stroke: "hsl(var(--primary))", strokeWidth: 2 }}
+                            />
+                          </AreaChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
 
                 {/* Subject-wise Performance */}
-                <Card className="rounded-2xl shadow-sm">
-                  <CardHeader>
-                    <CardTitle className="text-base sm:text-lg">Subject-wise Average</CardTitle>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.8 }}
+                  whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
+                >
+                  <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-green-50/50 to-emerald-50/50 dark:from-green-950/10 dark:to-emerald-950/10">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30">
+                          <BarChart3 className="h-5 w-5 text-green-600 dark:text-green-400" />
+                        </div>
+                        <CardTitle className="text-lg font-semibold">Subject-wise Average</CardTitle>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-[280px] sm:h-[320px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={subjectAverages}>
+                            <defs>
+                              <linearGradient id="colorBar" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
+                                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.6}/>
+                              </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                            <XAxis 
+                              dataKey="subject" 
+                              fontSize={12} 
+                              stroke="hsl(var(--muted-foreground))"
+                              tickLine={false}
+                              axisLine={false}
+                            />
+                            <YAxis 
+                              domain={[0, 100]} 
+                              fontSize={12} 
+                              stroke="hsl(var(--muted-foreground))"
+                              tickLine={false}
+                              axisLine={false}
+                            />
+                            <Tooltip
+                              contentStyle={{
+                                backgroundColor: 'hsl(var(--card))',
+                                border: '1px solid hsl(var(--border))',
+                                borderRadius: '12px',
+                                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                              }}
+                              formatter={(value, _name, props) => [
+                                String(Math.round(Number(value))) + "%",
+                                "Average Score (" + String(props?.payload?.totalTests ?? 0) + " tests)"
+                              ]}
+                            />
+                            <Bar 
+                              dataKey="averageScore" 
+                              fill="url(#colorBar)"
+                              radius={[8, 8, 0, 0]}
+                              stroke="hsl(var(--primary))"
+                              strokeWidth={1}
+                            />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </motion.div>
+
+              {/* Recent Test Results */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.9 }}
+              >
+                <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-gray-50/50 to-slate-50/50 dark:from-gray-950/10 dark:to-slate-950/10">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-900/30">
+                        <BookOpen className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                      </div>
+                      <CardTitle className="text-lg font-semibold">Recent Test Results</CardTitle>
+                    </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="h-[250px] sm:h-[300px]">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={subjectAverages}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="subject" fontSize={12} />
-                          <YAxis domain={[0, 100]} fontSize={12} />
-                          <Tooltip
-                            formatter={(value, _name, props) => [
-                              String(Math.round(Number(value))) + "%",
-                              "Average Score (" + String(props?.payload?.totalTests ?? 0) + " tests)"
-                            ]}
-                          />
-                          <Bar 
-                            dataKey="averageScore" 
-                            fill="hsl(var(--primary))" 
-                            radius={[4, 4, 0, 0]}
-                          />
-                        </BarChart>
-                      </ResponsiveContainer>
+                    <div className="space-y-3 sm:space-y-4">
+                      {results.slice(0, 10).map((result, index) => (
+                        <motion.div 
+                          key={result.id} 
+                          className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 border-2 rounded-xl hover:shadow-lg transition-all bg-card hover:border-primary/20 gap-3 sm:gap-0 hover:scale-[1.01]"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: 1.0 + (index * 0.1) }}
+                          whileHover={{ 
+                            scale: 1.02, 
+                            transition: { duration: 0.2 },
+                            boxShadow: "0 10px 25px -5px rgb(0 0 0 / 0.1)"
+                          }}
+                        >
+                          <div className="flex-1 w-full sm:w-auto">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 mb-2">
+                              <h3 className="font-medium text-sm sm:text-base">{result.subject}</h3>
+                              <Badge variant={getScoreBadgeVariant(result.score_percent)} className="text-xs">
+                                {result.score_percent}%
+                              </Badge>
+                            </div>
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6 text-xs sm:text-sm text-muted-foreground">
+                              <span>📅 {new Date(result.created_at).toLocaleDateString()}</span>
+                              <span>✅ {result.correct_count}/{result.total_questions} correct</span>
+                              <span>❌ {result.wrong_count} wrong</span>
+                              {result.time_per_question && result.time_per_question.length > 0 && (
+                                <span className="flex items-center gap-1">
+                                  <Clock className="h-3 w-3" />
+                                  {formatTime(Math.round(result.time_per_question.reduce((sum, time) => sum + time, 0) / result.time_per_question.length))} avg
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <motion.div 
+                            className={`text-xl sm:text-2xl font-bold ${getScoreColor(result.score_percent)} self-end sm:self-auto`}
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ delay: 1.2 + (index * 0.1), type: "spring", stiffness: 200 }}
+                          >
+                            {result.score_percent}%
+                          </motion.div>
+                        </motion.div>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
-              </div>
-
-              {/* Recent Test Results */}
-              <Card className="rounded-2xl shadow-sm">
-                <CardHeader>
-                  <CardTitle className="text-base sm:text-lg">Recent Test Results</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3 sm:space-y-4">
-                    {results.slice(0, 10).map((result) => (
-                      <div 
-                        key={result.id} 
-                        className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 border-2 rounded-xl hover:shadow-lg transition-all bg-card hover:border-primary/20 gap-3 sm:gap-0"
-                      >
-                        <div className="flex-1 w-full sm:w-auto">
-                          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 mb-2">
-                            <h3 className="font-medium text-sm sm:text-base">{result.subject}</h3>
-                            <Badge variant={getScoreBadgeVariant(result.score_percent)} className="text-xs">
-                              {result.score_percent}%
-                            </Badge>
-                          </div>
-                          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6 text-xs sm:text-sm text-muted-foreground">
-                            <span>📅 {new Date(result.created_at).toLocaleDateString()}</span>
-                            <span>✅ {result.correct_count}/{result.total_questions} correct</span>
-                            <span>❌ {result.wrong_count} wrong</span>
-                            {result.time_per_question && result.time_per_question.length > 0 && (
-                              <span className="flex items-center gap-1">
-                                <Clock className="h-3 w-3" />
-                                {formatTime(Math.round(result.time_per_question.reduce((sum, time) => sum + time, 0) / result.time_per_question.length))} avg
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className={`text-xl sm:text-2xl font-bold ${getScoreColor(result.score_percent)} self-end sm:self-auto`}>
-                          {result.score_percent}%
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              </motion.div>
             </>
-          )}
+            )}
+          </AnimatePresence>
         </div>
       </div>
-    
   );
 };
 
