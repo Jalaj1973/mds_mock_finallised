@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/hooks/useTheme";
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import ProfilePage from "./pages/ProfilePage";
 import Test from "./pages/Test";
 import Results from "./pages/Results";
 import Analytics from "./pages/Analytics";
@@ -35,6 +36,7 @@ function RouteTransitions() {
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/profile" element={<ProfilePage />} />
           <Route path="/test/:subject" element={<Test />} />
           <Route path="/results" element={<Results />} />
           <Route path="/analytics" element={<Analytics />} />

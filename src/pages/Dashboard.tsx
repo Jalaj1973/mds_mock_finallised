@@ -12,7 +12,8 @@ import {
   BookOpen, 
   LogOut,
   BarChart3,
-  MessageSquare
+  MessageSquare,
+  Settings
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -244,6 +245,15 @@ const Dashboard = () => {
             >
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">Analytics</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/dashboard/profile')}
+              className="flex items-center gap-2 text-xs sm:text-sm"
+              size="sm"
+            >
+              <Settings className="h-4 w-4" />
+              <span className="hidden sm:inline">Profile</span>
             </Button>
             <Button variant="outline" onClick={handleLogout} size="sm" className="text-xs sm:text-sm">
               <LogOut className="h-4 w-4 sm:mr-2" />

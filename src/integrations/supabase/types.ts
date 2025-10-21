@@ -245,6 +245,47 @@ export type Database = {
           }
         ]
       }
+      profiles: {
+        Row: {
+          id: string
+          display_name: string
+          college: string | null
+          year: string | null
+          status: string | null
+          last_name_change: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          display_name: string
+          college?: string | null
+          year?: string | null
+          status?: string | null
+          last_name_change?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          display_name?: string
+          college?: string | null
+          year?: string | null
+          status?: string | null
+          last_name_change?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
