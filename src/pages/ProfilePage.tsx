@@ -180,6 +180,20 @@ const ProfilePage = () => {
         
         updateData.display_name = displayName;
         updateData.last_name_change = new Date().toISOString();
+
+        // Update the user's metadata in Supabase Auth
+        const { error: authError } = await supabase.auth.updateUser({
+          data: { display_name: displayName }
+        });
+
+        if (authError) {
+          console.error("Error updating auth metadata:", authError);
+          toast({
+            title: "Warning",
+            description: "Profile updated but display name may not reflect in dashboard. Please refresh the page.",
+            variant: "destructive",
+          });
+        }
       }
 
       const { error } = await supabase
