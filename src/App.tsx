@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
@@ -35,15 +36,50 @@ function RouteTransitions() {
         <Routes location={location}>
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/profile" element={<ProfilePage />} />
-          <Route path="/test/:subject" element={<Test />} />
-          <Route path="/results" element={<Results />} />
-          <Route path="/analytics" element={<Analytics />} />
           <Route path="/terms" element={<Terms />} />
-          <Route path="/community" element={<CommunityPage />} />
-          <Route path="/community/new" element={<NewPostPage />} />
-          <Route path="/community/post/:id" element={<PostDetailPage />} />
+          
+          {/* Protected Routes - Require Authentication */}
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard/profile" element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/test/:subject" element={
+            <ProtectedRoute>
+              <Test />
+            </ProtectedRoute>
+          } />
+          <Route path="/results" element={
+            <ProtectedRoute>
+              <Results />
+            </ProtectedRoute>
+          } />
+          <Route path="/analytics" element={
+            <ProtectedRoute>
+              <Analytics />
+            </ProtectedRoute>
+          } />
+          <Route path="/community" element={
+            <ProtectedRoute>
+              <CommunityPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/community/new" element={
+            <ProtectedRoute>
+              <NewPostPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/community/post/:id" element={
+            <ProtectedRoute>
+              <PostDetailPage />
+            </ProtectedRoute>
+          } />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
