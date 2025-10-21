@@ -425,7 +425,7 @@ const Analytics = () => {
                               strokeWidth={3}
                               fill="url(#colorScore)"
                               dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
-                              activeDot={{ r: 6, stroke: "#3b82f6", strokeWidth: 2, fill: "#ffffff" }}
+                              activeDot={{ r: 6, stroke: "#3b82f6", strokeWidth: 2, fill: "#3b82f6" }}
                             />
                           </AreaChart>
                         </ResponsiveContainer>
@@ -460,6 +460,11 @@ const Analytics = () => {
                                 <stop offset="50%" stopColor="#059669" stopOpacity={0.8}/>
                                 <stop offset="95%" stopColor="#047857" stopOpacity={0.7}/>
                               </linearGradient>
+                              <linearGradient id="colorBarHover" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#065f46" stopOpacity={1}/>
+                                <stop offset="50%" stopColor="#047857" stopOpacity={0.9}/>
+                                <stop offset="95%" stopColor="#064e3b" stopOpacity={0.8}/>
+                              </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                             <XAxis 
@@ -490,10 +495,10 @@ const Analytics = () => {
                             />
                             <Bar 
                               dataKey="averageScore" 
-                              fill="url(#colorBar)"
+                              fill="#10b981"
                               radius={[8, 8, 0, 0]}
-                              stroke="hsl(var(--primary))"
-                              strokeWidth={1}
+                              stroke="#059669"
+                              strokeWidth={2}
                               style={{
                                 filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
                               }}
