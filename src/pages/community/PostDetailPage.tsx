@@ -257,9 +257,56 @@ const PostDetailPage = () => {
           });
       }
 
-      // Reload post to update vote counts
-      console.log("Vote successful, reloading post...");
-      await loadPost();
+      // Update the local state immediately for better UX
+      console.log("Vote successful, updating local state...");
+      
+      if (post) {
+        setPost(prevPost => {
+          if (!prevPost) return prevPost;
+          
+          // Calculate new vote counts
+          const currentUpvotes = prevPost.upvotes;
+          const currentDownvotes = prevPost.downvotes;
+          const currentUserVote = prevPost.user_vote;
+          
+          let newUpvotes = currentUpvotes;
+          let newDownvotes = currentDownvotes;
+          let newUserVote: 'up' | 'down' | undefined = voteType;
+          
+          if (currentUserVote === voteType) {
+            // Same vote - remove it
+            if (voteType === 'up') {
+              newUpvotes = Math.max(0, currentUpvotes - 1);
+            } else {
+              newDownvotes = Math.max(0, currentDownvotes - 1);
+            }
+            newUserVote = undefined;
+          } else if (currentUserVote) {
+            // Different vote - switch it
+            if (voteType === 'up') {
+              newUpvotes = currentUpvotes + 1;
+              newDownvotes = Math.max(0, currentDownvotes - 1);
+            } else {
+              newDownvotes = currentDownvotes + 1;
+              newUpvotes = Math.max(0, currentUpvotes - 1);
+            }
+          } else {
+            // New vote
+            if (voteType === 'up') {
+              newUpvotes = currentUpvotes + 1;
+            } else {
+              newDownvotes = currentDownvotes + 1;
+            }
+          }
+          
+          return {
+            ...prevPost,
+            upvotes: newUpvotes,
+            downvotes: newDownvotes,
+            user_vote: newUserVote
+          };
+        });
+      }
       
       toast({
         title: "Vote Recorded",
@@ -525,17 +572,17 @@ const PostDetailPage = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 ml-4">
-                  <div className="flex flex-col items-center gap-1">
+                  <div className="flex items-center gap-1 bg-gray-50 dark:bg-gray-800 rounded-lg p-1">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => handleVote('up')}
                       disabled={voteLoading}
-                      className={`p-2 ${post.user_vote === 'up' ? 'text-green-600 bg-green-50 dark:bg-green-950' : 'hover:text-green-600'}`}
+                      className={`h-8 w-8 p-0 ${post.user_vote === 'up' ? 'text-green-600 bg-green-100 dark:bg-green-900' : 'hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'}`}
                     >
                       <ThumbsUp className="h-4 w-4" />
                     </Button>
-                    <span className="text-xl font-bold text-center min-w-[3rem]">
+                    <span className="text-lg font-bold text-center min-w-[2rem] px-2">
                       {post.upvotes - post.downvotes}
                     </span>
                     <Button
@@ -543,14 +590,10 @@ const PostDetailPage = () => {
                       size="sm"
                       onClick={() => handleVote('down')}
                       disabled={voteLoading}
-                      className={`p-2 ${post.user_vote === 'down' ? 'text-red-600 bg-red-50 dark:bg-red-950' : 'hover:text-red-600'}`}
+                      className={`h-8 w-8 p-0 ${post.user_vote === 'down' ? 'text-red-600 bg-red-100 dark:bg-red-900' : 'hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'}`}
                     >
                       <ThumbsDown className="h-4 w-4" />
                     </Button>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span className="text-green-600">+{post.upvotes}</span>
-                      <span className="text-red-600">-{post.downvotes}</span>
-                    </div>
                   </div>
                   {user && user.id === post.user_id && (
                     <Button

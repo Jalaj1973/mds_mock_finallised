@@ -186,9 +186,57 @@ const CommunityPage = () => {
           });
       }
 
-      // Reload posts to update vote counts
-      console.log("Vote successful, reloading posts...");
-      await loadPosts();
+      // Update the local state immediately for better UX
+      console.log("Vote successful, updating local state...");
+      
+      setPosts(prevPosts => 
+        prevPosts.map(p => {
+          if (p.id === postId) {
+            // Calculate new vote counts
+            const currentUpvotes = p.upvotes;
+            const currentDownvotes = p.downvotes;
+            const currentUserVote = p.user_vote;
+            
+            let newUpvotes = currentUpvotes;
+            let newDownvotes = currentDownvotes;
+            let newUserVote: 'up' | 'down' | undefined = voteType;
+            
+            if (currentUserVote === voteType) {
+              // Same vote - remove it
+              if (voteType === 'up') {
+                newUpvotes = Math.max(0, currentUpvotes - 1);
+              } else {
+                newDownvotes = Math.max(0, currentDownvotes - 1);
+              }
+              newUserVote = undefined;
+            } else if (currentUserVote) {
+              // Different vote - switch it
+              if (voteType === 'up') {
+                newUpvotes = currentUpvotes + 1;
+                newDownvotes = Math.max(0, currentDownvotes - 1);
+              } else {
+                newDownvotes = currentDownvotes + 1;
+                newUpvotes = Math.max(0, currentUpvotes - 1);
+              }
+            } else {
+              // New vote
+              if (voteType === 'up') {
+                newUpvotes = currentUpvotes + 1;
+              } else {
+                newDownvotes = currentDownvotes + 1;
+              }
+            }
+            
+            return {
+              ...p,
+              upvotes: newUpvotes,
+              downvotes: newDownvotes,
+              user_vote: newUserVote
+            };
+          }
+          return p;
+        })
+      );
       
       toast({
         title: "Vote Recorded",
@@ -357,8 +405,8 @@ const CommunityPage = () => {
                           <Badge variant="secondary">{post.subject}</Badge>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4 ml-4">
-                        <div className="flex flex-col items-center gap-1">
+                      <div className="flex items-center gap-2 ml-4">
+                        <div className="flex items-center gap-1 bg-gray-50 dark:bg-gray-800 rounded-lg p-1">
                           <Button
                             variant="ghost"
                             size="sm"
@@ -367,11 +415,11 @@ const CommunityPage = () => {
                               handleVote(post.id, 'up');
                             }}
                             disabled={voteLoading}
-                            className={`p-1 ${post.user_vote === 'up' ? 'text-green-600 bg-green-50 dark:bg-green-950' : 'hover:text-green-600'}`}
+                            className={`h-6 w-6 p-0 ${post.user_vote === 'up' ? 'text-green-600 bg-green-100 dark:bg-green-900' : 'hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'}`}
                           >
-                            <ThumbsUp className="h-4 w-4" />
+                            <ThumbsUp className="h-3 w-3" />
                           </Button>
-                          <span className="text-lg font-bold text-center min-w-[2rem]">
+                          <span className="text-sm font-semibold text-center min-w-[1.5rem] px-1">
                             {post.upvotes - post.downvotes}
                           </span>
                           <Button
@@ -382,14 +430,10 @@ const CommunityPage = () => {
                               handleVote(post.id, 'down');
                             }}
                             disabled={voteLoading}
-                            className={`p-1 ${post.user_vote === 'down' ? 'text-red-600 bg-red-50 dark:bg-red-950' : 'hover:text-red-600'}`}
+                            className={`h-6 w-6 p-0 ${post.user_vote === 'down' ? 'text-red-600 bg-red-100 dark:bg-red-900' : 'hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'}`}
                           >
-                            <ThumbsDown className="h-4 w-4" />
+                            <ThumbsDown className="h-3 w-3" />
                           </Button>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <span className="text-green-600">+{post.upvotes}</span>
-                            <span className="text-red-600">-{post.downvotes}</span>
-                          </div>
                         </div>
                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
                           <MessageSquare className="h-4 w-4" />
