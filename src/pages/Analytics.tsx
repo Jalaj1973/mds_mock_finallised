@@ -311,14 +311,14 @@ const Analytics = () => {
                   transition={{ duration: 0.5, delay: 0.4 }}
                   whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
                 >
-                  <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/20 dark:to-purple-900/20">
+                  <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-950/20 dark:to-indigo-900/20">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-xs sm:text-sm font-medium">Avg Time/Question</CardTitle>
-                      <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                      <Clock className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
                     </CardHeader>
                     <CardContent>
                       <motion.div 
-                        className="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400"
+                        className="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
@@ -335,14 +335,14 @@ const Analytics = () => {
                   transition={{ duration: 0.5, delay: 0.5 }}
                   whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
                 >
-                  <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-orange-900/20">
+                  <Card className="rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950/20 dark:to-emerald-900/20">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-xs sm:text-sm font-medium">Subjects Covered</CardTitle>
-                      <Target className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                      <Target className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                     </CardHeader>
                     <CardContent>
                       <motion.div 
-                        className="text-xl sm:text-2xl font-bold text-orange-600 dark:text-orange-400"
+                        className="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
@@ -383,8 +383,9 @@ const Analytics = () => {
                           <AreaChart data={trendData}>
                             <defs>
                               <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4}/>
+                                <stop offset="50%" stopColor="#2563eb" stopOpacity={0.2}/>
+                                <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0}/>
                               </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -420,11 +421,11 @@ const Analytics = () => {
                             <Area
                               type="monotone"
                               dataKey="score"
-                              stroke="hsl(var(--primary))"
+                              stroke="#3b82f6"
                               strokeWidth={3}
                               fill="url(#colorScore)"
-                              dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
-                              activeDot={{ r: 6, stroke: "hsl(var(--primary))", strokeWidth: 2 }}
+                              dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
+                              activeDot={{ r: 6, stroke: "#3b82f6", strokeWidth: 2, fill: "#ffffff" }}
                             />
                           </AreaChart>
                         </ResponsiveContainer>
@@ -455,8 +456,9 @@ const Analytics = () => {
                           <BarChart data={subjectAverages}>
                             <defs>
                               <linearGradient id="colorBar" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
-                                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.6}/>
+                                <stop offset="5%" stopColor="#10b981" stopOpacity={0.9}/>
+                                <stop offset="50%" stopColor="#059669" stopOpacity={0.8}/>
+                                <stop offset="95%" stopColor="#047857" stopOpacity={0.7}/>
                               </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -492,6 +494,9 @@ const Analytics = () => {
                               radius={[8, 8, 0, 0]}
                               stroke="hsl(var(--primary))"
                               strokeWidth={1}
+                              style={{
+                                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+                              }}
                             />
                           </BarChart>
                         </ResponsiveContainer>
