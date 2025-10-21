@@ -349,8 +349,8 @@ const CommunityPage = () => {
                           <Badge variant="secondary">{post.subject}</Badge>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 ml-4">
-                        <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-4 ml-4">
+                        <div className="flex flex-col items-center gap-1">
                           <Button
                             variant="ghost"
                             size="sm"
@@ -359,11 +359,11 @@ const CommunityPage = () => {
                               handleVote(post.id, 'up');
                             }}
                             disabled={voteLoading}
-                            className={`p-1 ${post.user_vote === 'up' ? 'text-green-600' : ''}`}
+                            className={`p-1 ${post.user_vote === 'up' ? 'text-green-600 bg-green-50 dark:bg-green-950' : 'hover:text-green-600'}`}
                           >
                             <ThumbsUp className="h-4 w-4" />
                           </Button>
-                          <span className="text-sm font-medium min-w-[2rem] text-center">
+                          <span className="text-lg font-bold text-center min-w-[2rem]">
                             {post.upvotes - post.downvotes}
                           </span>
                           <Button
@@ -374,10 +374,14 @@ const CommunityPage = () => {
                               handleVote(post.id, 'down');
                             }}
                             disabled={voteLoading}
-                            className={`p-1 ${post.user_vote === 'down' ? 'text-red-600' : ''}`}
+                            className={`p-1 ${post.user_vote === 'down' ? 'text-red-600 bg-red-50 dark:bg-red-950' : 'hover:text-red-600'}`}
                           >
                             <ThumbsDown className="h-4 w-4" />
                           </Button>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span className="text-green-600">+{post.upvotes}</span>
+                            <span className="text-red-600">-{post.downvotes}</span>
+                          </div>
                         </div>
                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
                           <MessageSquare className="h-4 w-4" />
