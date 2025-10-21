@@ -42,6 +42,10 @@ const ProfilePage = () => {
   const [year, setYear] = useState("");
   const [status, setStatus] = useState("");
   
+  // User stats
+  const [postsCount, setPostsCount] = useState(0);
+  const [repliesCount, setRepliesCount] = useState(0);
+  
   // Check if name change is restricted
   const canChangeName = () => {
     if (!profile?.last_name_change) return true;
@@ -68,6 +72,7 @@ const ProfilePage = () => {
   useEffect(() => {
     if (user) {
       loadProfile();
+      loadUserStats();
     }
   }, [user]);
 
@@ -155,6 +160,38 @@ const ProfilePage = () => {
     }
   };
 
+  const loadUserStats = async () => {
+    if (!user) return;
+
+    try {
+      // Get posts count
+      const { count: postsCount, error: postsError } = await supabase
+        .from("posts")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id);
+
+      if (postsError) {
+        console.error("Error loading posts count:", postsError);
+      } else {
+        setPostsCount(postsCount || 0);
+      }
+
+      // Get replies count
+      const { count: repliesCount, error: repliesError } = await supabase
+        .from("replies")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id);
+
+      if (repliesError) {
+        console.error("Error loading replies count:", repliesError);
+      } else {
+        setRepliesCount(repliesCount || 0);
+      }
+    } catch (error) {
+      console.error("Error loading user stats:", error);
+    }
+  };
+
   const handleSave = async () => {
     if (!user || !profile) return;
 
@@ -207,6 +244,9 @@ const ProfilePage = () => {
 
       // Reload profile to get updated data
       await loadProfile();
+      
+      // Reload user stats
+      await loadUserStats();
 
       toast({
         title: "Profile Updated",
@@ -351,11 +391,11 @@ const ProfilePage = () => {
                 <CardContent className="pt-0">
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div className="p-4 rounded-lg bg-muted/50">
-                      <div className="text-2xl font-bold text-primary">0</div>
+                      <div className="text-2xl font-bold text-primary">{postsCount}</div>
                       <div className="text-sm text-muted-foreground">Posts</div>
                     </div>
                     <div className="p-4 rounded-lg bg-muted/50">
-                      <div className="text-2xl font-bold text-primary">0</div>
+                      <div className="text-2xl font-bold text-primary">{repliesCount}</div>
                       <div className="text-sm text-muted-foreground">Replies</div>
                     </div>
                   </div>
