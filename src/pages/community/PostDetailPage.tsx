@@ -97,6 +97,8 @@ const PostDetailPage = () => {
       const upvotes = data.votes?.filter((v: any) => v.vote_type === 'up').length || 0;
       const downvotes = data.votes?.filter((v: any) => v.vote_type === 'down').length || 0;
       
+      console.log(`Post ${data.id}: ${upvotes} upvotes, ${downvotes} downvotes, votes data:`, data.votes);
+      
       // Get user's vote if they're logged in
       let userVote: 'up' | 'down' | undefined;
       if (user && data.votes) {
@@ -256,12 +258,18 @@ const PostDetailPage = () => {
       }
 
       // Reload post to update vote counts
-      loadPost();
-    } catch (error) {
+      console.log("Vote successful, reloading post...");
+      await loadPost();
+      
+      toast({
+        title: "Vote Recorded",
+        description: "Your vote has been recorded successfully!",
+      });
+    } catch (error: any) {
       console.error("Error voting:", error);
       toast({
         title: "Error",
-        description: "Failed to vote. Please try again.",
+        description: error.message || "Failed to vote. Please try again.",
         variant: "destructive",
       });
     } finally {

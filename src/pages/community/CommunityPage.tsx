@@ -90,6 +90,8 @@ const CommunityPage = () => {
         const downvotes = post.votes?.filter(v => v.vote_type === 'down').length || 0;
         const replyCount = post.replies?.length || 0;
         
+        console.log(`Post ${post.id}: ${upvotes} upvotes, ${downvotes} downvotes, votes data:`, post.votes);
+        
         // Get user's vote if they're logged in
         let userVote: 'up' | 'down' | undefined;
         if (user && post.votes) {
@@ -140,7 +142,7 @@ const CommunityPage = () => {
     }
   };
 
-  const handleVote = async (postId: number, voteType: 'up' | 'down') => {
+  const handleVote = async (postId: string, voteType: 'up' | 'down') => {
     if (!user) {
       navigate("/auth");
       return;
@@ -185,7 +187,13 @@ const CommunityPage = () => {
       }
 
       // Reload posts to update vote counts
-      loadPosts();
+      console.log("Vote successful, reloading posts...");
+      await loadPosts();
+      
+      toast({
+        title: "Vote Recorded",
+        description: "Your vote has been recorded successfully!",
+      });
     } catch (error: any) {
       console.error("Error voting:", error);
       toast({
