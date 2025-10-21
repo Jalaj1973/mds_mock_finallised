@@ -311,168 +311,211 @@ const ProfilePage = () => {
       </header>
 
       {/* Main Content */}
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
         >
-          {/* User Info Card */}
-          <Card className="mb-6">
-            <CardHeader>
-              <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16">
-                  <AvatarFallback className="text-lg font-semibold">
-                    {getInitials(profile.display_name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h1 className="text-2xl font-bold">{profile.display_name}</h1>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
-                    <div className="flex items-center gap-1">
-                      <User className="h-4 w-4" />
-                      {user.email}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      Joined {formatDate(profile.created_at)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardHeader>
-          </Card>
-
-          {/* Profile Form */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Display Name */}
-              <div className="space-y-2">
-                <Label htmlFor="displayName">Full Name</Label>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div>
-                        <Input
-                          id="displayName"
-                          value={displayName}
-                          onChange={(e) => setDisplayName(e.target.value)}
-                          disabled={!canChangeName()}
-                          className={!canChangeName() ? "bg-muted" : ""}
-                        />
+          {/* Left Column - User Info */}
+          <div className="lg:col-span-1">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <Card className="h-fit">
+                <CardHeader className="text-center pb-6">
+                  <div className="flex flex-col items-center gap-6">
+                    <Avatar className="h-32 w-32 border-4 border-primary/20">
+                      <AvatarFallback className="text-4xl font-bold bg-primary/10">
+                        {getInitials(profile.display_name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="text-center">
+                      <h1 className="text-3xl font-bold mb-2">{profile.display_name}</h1>
+                      <div className="space-y-2 text-sm text-muted-foreground">
+                        <div className="flex items-center justify-center gap-2">
+                          <User className="h-4 w-4" />
+                          <span className="truncate">{user.email}</span>
+                        </div>
+                        <div className="flex items-center justify-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          <span>Joined {formatDate(profile.created_at)}</span>
+                        </div>
                       </div>
-                    </TooltipTrigger>
-                    {!canChangeName() && (
-                      <TooltipContent>
-                        <p>You can change your name again after 60 days.</p>
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
-                {!canChangeName() && (
-                  <p className="text-sm text-muted-foreground">
-                    You can change your name again after 60 days.
-                  </p>
-                )}
-              </div>
-
-              {/* College */}
-              <div className="space-y-2">
-                <Label htmlFor="college">College</Label>
-                <Input
-                  id="college"
-                  value={college}
-                  onChange={(e) => setCollege(e.target.value)}
-                  placeholder="Enter your college name"
-                />
-              </div>
-
-              {/* Year */}
-              <div className="space-y-2">
-                <Label htmlFor="year">Year</Label>
-                <Select value={year} onValueChange={setYear}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your year" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1st Year">1st Year</SelectItem>
-                    <SelectItem value="2nd Year">2nd Year</SelectItem>
-                    <SelectItem value="3rd Year">3rd Year</SelectItem>
-                    <SelectItem value="Intern">Intern</SelectItem>
-                    <SelectItem value="PG">PG</SelectItem>
-                    <SelectItem value="Doctor">Doctor</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Status */}
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="UG">UG</SelectItem>
-                    <SelectItem value="PG">PG</SelectItem>
-                    <SelectItem value="Doctor">Doctor</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Save Button */}
-              <Button 
-                onClick={handleSave} 
-                disabled={saving}
-                className="w-full"
-              >
-                {saving ? (
-                  <div className="flex items-center gap-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    Saving...
+                    </div>
                   </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Save className="h-4 w-4" />
-                    Save Changes
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="grid grid-cols-2 gap-4 text-center">
+                    <div className="p-4 rounded-lg bg-muted/50">
+                      <div className="text-2xl font-bold text-primary">0</div>
+                      <div className="text-sm text-muted-foreground">Posts</div>
+                    </div>
+                    <div className="p-4 rounded-lg bg-muted/50">
+                      <div className="text-2xl font-bold text-primary">0</div>
+                      <div className="text-sm text-muted-foreground">Replies</div>
+                    </div>
                   </div>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
 
-          {/* Danger Zone */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <Card className="mt-6 border-red-200 dark:border-red-800">
+          {/* Right Column - Profile Form */}
+          <div className="lg:col-span-2">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+
+              {/* Profile Form */}
+              <Card>
+                <CardHeader className="pb-6">
+                  <CardTitle className="text-2xl">Profile Information</CardTitle>
+                  <p className="text-muted-foreground">Update your personal information and preferences</p>
+                </CardHeader>
+                <CardContent className="space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Display Name */}
+                    <div className="md:col-span-2 space-y-3">
+                      <Label htmlFor="displayName" className="text-base font-medium">Full Name</Label>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div>
+                              <Input
+                                id="displayName"
+                                value={displayName}
+                                onChange={(e) => setDisplayName(e.target.value)}
+                                disabled={!canChangeName()}
+                                className={`text-base h-12 ${!canChangeName() ? "bg-muted" : ""}`}
+                                placeholder="Enter your full name"
+                              />
+                            </div>
+                          </TooltipTrigger>
+                          {!canChangeName() && (
+                            <TooltipContent>
+                              <p>You can change your name again after 60 days.</p>
+                            </TooltipContent>
+                          )}
+                        </Tooltip>
+                      </TooltipProvider>
+                      {!canChangeName() && (
+                        <p className="text-sm text-muted-foreground">
+                          You can change your name again after 60 days.
+                        </p>
+                      )}
+                    </div>
+
+                    {/* College */}
+                    <div className="space-y-3">
+                      <Label htmlFor="college" className="text-base font-medium">College</Label>
+                      <Input
+                        id="college"
+                        value={college}
+                        onChange={(e) => setCollege(e.target.value)}
+                        placeholder="Enter your college name"
+                        className="text-base h-12"
+                      />
+                    </div>
+
+                    {/* Year */}
+                    <div className="space-y-3">
+                      <Label htmlFor="year" className="text-base font-medium">Academic Year</Label>
+                      <Select value={year} onValueChange={setYear}>
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder="Select your year" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1st Year">1st Year</SelectItem>
+                          <SelectItem value="2nd Year">2nd Year</SelectItem>
+                          <SelectItem value="3rd Year">3rd Year</SelectItem>
+                          <SelectItem value="Intern">Intern</SelectItem>
+                          <SelectItem value="PG">PG</SelectItem>
+                          <SelectItem value="Doctor">Doctor</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Status */}
+                    <div className="space-y-3">
+                      <Label htmlFor="status" className="text-base font-medium">Status</Label>
+                      <Select value={status} onValueChange={setStatus}>
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder="Select your status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="UG">Undergraduate</SelectItem>
+                          <SelectItem value="PG">Postgraduate</SelectItem>
+                          <SelectItem value="Doctor">Doctor</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Save Button */}
+                  <div className="pt-4">
+                    <Button 
+                      onClick={handleSave} 
+                      disabled={saving}
+                      size="lg"
+                      className="w-full h-12 text-base"
+                    >
+                      {saving ? (
+                        <div className="flex items-center gap-2">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          Saving Changes...
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <Save className="h-5 w-5" />
+                          Save Changes
+                        </div>
+                      )}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Danger Zone */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-8"
+        >
+          <div className="max-w-4xl mx-auto">
+            <Card className="border-red-200 dark:border-red-800">
               <CardHeader>
-                <CardTitle className="text-red-600 flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5" />
+                <CardTitle className="text-red-600 flex items-center gap-2 text-xl">
+                  <AlertTriangle className="h-6 w-6" />
                   Danger Zone
                 </CardTitle>
+                <p className="text-muted-foreground">Irreversible and destructive actions</p>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold">Delete Account</h3>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 rounded-lg border border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-red-950/20">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg mb-2">Delete Account</h3>
                     <p className="text-sm text-muted-foreground">
-                      Permanently delete your account and all associated data.
+                      Permanently delete your account and all associated data. This action cannot be undone.
                     </p>
                   </div>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button variant="destructive" disabled={deleting}>
-                        <Trash2 className="h-4 w-4 mr-2" />
+                      <Button variant="destructive" disabled={deleting} size="lg" className="h-12">
+                        <Trash2 className="h-5 w-5 mr-2" />
                         Delete Account
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent>
+                    <AlertDialogContent className="max-w-md">
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
@@ -508,7 +551,7 @@ const ProfilePage = () => {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </motion.div>
       </div>
     </div>
